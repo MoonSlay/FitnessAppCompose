@@ -3,8 +3,6 @@ package com.example.fitnessappcompose.ui.screens
 import android.graphics.Bitmap
 import android.graphics.ImageDecoder
 import android.net.Uri
-import android.os.Build
-import android.provider.MediaStore
 import android.util.Log
 import androidx.activity.compose.rememberLauncherForActivityResult
 import androidx.activity.result.contract.ActivityResultContracts
@@ -50,12 +48,8 @@ fun ProfileSetupScreen(onProfileSetupComplete: () -> Unit, navController: NavCon
 
     LaunchedEffect(imageUri) {
         imageUri?.let {
-            bitmap = if (Build.VERSION.SDK_INT < 28) {
-                MediaStore.Images.Media.getBitmap(context.contentResolver, it)
-            } else {
-                val source = ImageDecoder.createSource(context.contentResolver, it)
-                ImageDecoder.decodeBitmap(source)
-            }
+            val source = ImageDecoder.createSource(context.contentResolver, it)
+            bitmap = ImageDecoder.decodeBitmap(source)
         }
     }
 
@@ -63,11 +57,11 @@ fun ProfileSetupScreen(onProfileSetupComplete: () -> Unit, navController: NavCon
         modifier = Modifier
             .fillMaxSize()
             .padding(16.dp),
-        verticalArrangement = Arrangement.Center,
         horizontalAlignment = Alignment.CenterHorizontally
     ) {
+        Spacer(modifier = Modifier.height(20.dp))
         Text(text = "Set Up Your Profile", style = MaterialTheme.typography.headlineSmall)
-        Spacer(modifier = Modifier.height(25.dp))
+        Spacer(modifier = Modifier.height(20.dp))
 
         Box(
             modifier = Modifier
@@ -94,13 +88,13 @@ fun ProfileSetupScreen(onProfileSetupComplete: () -> Unit, navController: NavCon
 
         Spacer(modifier = Modifier.height(8.dp))
         Text(text = "Choose Avatar")
-        Spacer(modifier = Modifier.height(25.dp))
+        Spacer(modifier = Modifier.height(16.dp))
 
         ProfileTextField(value = fullName, onValueChange = { fullName = it }, label = "Full Name", modifier = Modifier.fillMaxWidth())
-        Spacer(modifier = Modifier.height(25.dp))
+        Spacer(modifier = Modifier.height(16.dp))
 
         ProfileTextField(value = username, onValueChange = { username = it }, label = "Username", modifier = Modifier.fillMaxWidth())
-        Spacer(modifier = Modifier.height(25.dp))
+        Spacer(modifier = Modifier.height(16.dp))
 
         Row(modifier = Modifier.fillMaxWidth()) {
             ProfileTextField(
@@ -118,7 +112,7 @@ fun ProfileSetupScreen(onProfileSetupComplete: () -> Unit, navController: NavCon
                 modifier = Modifier.weight(1f)
             )
         }
-        Spacer(modifier = Modifier.height(25.dp))
+        Spacer(modifier = Modifier.height(16.dp))
 
         Row(modifier = Modifier.fillMaxWidth()) {
             ProfileTextField(
@@ -137,7 +131,7 @@ fun ProfileSetupScreen(onProfileSetupComplete: () -> Unit, navController: NavCon
                 modifier = Modifier.weight(1f)
             )
         }
-        Spacer(modifier = Modifier.height(25.dp))
+        Spacer(modifier = Modifier.height(16.dp))
 
         Button(onClick = {
             Log.d("ProfileSetupScreen", "Complete Setup button clicked")
