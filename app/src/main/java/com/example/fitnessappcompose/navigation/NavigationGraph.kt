@@ -7,7 +7,9 @@ import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import com.example.fitnessappcompose.ui.screens.HomeScreen
 import com.example.fitnessappcompose.ui.screens.ProfileScreen
+import com.example.fitnessappcompose.ui.screens.ProfileSetupScreen
 import com.example.fitnessappcompose.ui.screens.ReportScreen
+import com.example.fitnessappcompose.ui.screens.SetupGoalScreen
 import com.example.fitnessappcompose.ui.screens.TrainingScreen
 
 @Composable
@@ -17,5 +19,7 @@ fun NavigationGraph(navController: NavHostController, modifier: Modifier = Modif
         composable("Training") { TrainingScreen() }
         composable("Report") { ReportScreen() }
         composable("Profile") { ProfileScreen() }
+        composable("profile_setup") { ProfileSetupScreen(onProfileSetupComplete = {}, navController = navController) }
+        composable("setup_goal") { SetupGoalScreen() }
     }
 }

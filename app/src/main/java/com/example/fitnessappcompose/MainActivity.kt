@@ -34,7 +34,7 @@ class MainActivity : ComponentActivity() {
                     ProfileSetupScreen(onProfileSetupComplete = {
                         setUserProfileSetUp(this)
                         showProfileSetup = false
-                    })
+                    }, navController = navController)
                 } else {
                     Scaffold(
                         bottomBar = { BottomNavigationBar(navController) },
