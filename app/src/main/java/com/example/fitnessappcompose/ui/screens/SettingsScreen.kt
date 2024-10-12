@@ -1,4 +1,4 @@
-package com.example.fitnessappcompose
+package com.example.fitnessappcompose.ui.screens
 
 import androidx.compose.runtime.Composable
 

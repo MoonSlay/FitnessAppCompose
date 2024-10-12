@@ -1,4 +1,4 @@
-package com.example.fitnessappcompose
+package com.example.fitnessappcompose.ui.screens
 
 import androidx.compose.foundation.layout.*
 import androidx.compose.material3.Text
@@ -6,10 +6,12 @@ import androidx.compose.runtime.*
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.text.font.FontWeight
+import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import kotlinx.coroutines.delay
 
+@Preview
 @Composable
 fun HomeScreen() {
     val quotes = listOf(
@@ -32,12 +34,45 @@ fun HomeScreen() {
     Column(
         modifier = Modifier
             .fillMaxSize()
-            .padding(50.dp),
+            .padding(30.dp),
         horizontalAlignment = Alignment.CenterHorizontally,
     ) {
         Text(
             text = "Welcome \n to your \n fitness \n journey",
-            fontSize = 50.sp,
+            fontSize = 30.sp,
+            fontWeight = FontWeight.Bold,
+            modifier = Modifier.padding(bottom = 50.dp)
+        )
+        Text(
+            text = currentQuote,
+            fontSize = 18.sp,
+            fontWeight = FontWeight.Medium
+        )
+        Text(
+            text = "Welcome \n to your \n fitness \n journey",
+            fontSize = 30.sp,
+            fontWeight = FontWeight.Bold,
+            modifier = Modifier.padding(bottom = 50.dp)
+        )
+        Text(
+            text = currentQuote,
+            fontSize = 18.sp,
+            fontWeight = FontWeight.Medium
+        )
+        Text(
+            text = "Welcome \n to your \n fitness \n journey",
+            fontSize = 30.sp,
+            fontWeight = FontWeight.Bold,
+            modifier = Modifier.padding(bottom = 50.dp)
+        )
+        Text(
+            text = currentQuote,
+            fontSize = 18.sp,
+            fontWeight = FontWeight.Medium
+        )
+        Text(
+            text = "Welcome \n to your \n fitness \n journey",
+            fontSize = 30.sp,
             fontWeight = FontWeight.Bold,
             modifier = Modifier.padding(bottom = 50.dp)
         )

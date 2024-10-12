@@ -1,4 +1,4 @@
-package com.example.fitnessappcompose
+package com.example.fitnessappcompose.navigation
 
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.*
@@ -17,7 +17,6 @@ fun BottomNavigationBar(navController: NavController) {
             NavigationItem("Training", ImageVector.vectorResource(id = R.drawable.ic_fitness_center)),
             NavigationItem("Report", ImageVector.vectorResource(id = R.drawable.ic_report)),
             NavigationItem("Profile", Icons.Filled.Person),
-            NavigationItem("Settings", Icons.Filled.Settings)
         )
         items.forEach { item ->
             NavigationBarItem(
