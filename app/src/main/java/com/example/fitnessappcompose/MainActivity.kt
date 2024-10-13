@@ -13,7 +13,7 @@ import androidx.navigation.compose.rememberNavController
 import com.example.compose.AppTheme
 import com.example.fitnessappcompose.navigation.BottomNavigationBar
 import com.example.fitnessappcompose.navigation.NavigationGraph
-import com.example.fitnessappcompose.ui.screens.ProfileSetupScreen
+import com.example.fitnessappcompose.ui.screens.setup.ProfileSetupScreen
 import com.example.fitnessappcompose.ui.startup.StartupAnimation
 import com.example.fitnessappcompose.utils.isUserProfileSetUp
 import com.example.fitnessappcompose.utils.setUserProfileSetUp
@@ -34,6 +34,7 @@ class MainActivity : ComponentActivity() {
                     ProfileSetupScreen(onProfileSetupComplete = {
                         setUserProfileSetUp(this)
                         showProfileSetup = false
+                        navController.navigate("setup_goal") // Ensure navigation to setup_goal
                     }, navController = navController)
                 } else {
                     Scaffold(

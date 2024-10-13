@@ -1,19 +1,28 @@
 package com.example.fitnessappcompose.ui.screens
 
+import android.content.Context
 import androidx.compose.foundation.layout.*
+import androidx.compose.material3.CardDefaults
+import androidx.compose.material3.ElevatedCard
+import androidx.compose.material3.Icon
 import androidx.compose.material3.Text
 import androidx.compose.runtime.*
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
+import com.example.fitnessappcompose.utils.getUsername
 import kotlinx.coroutines.delay
 
 @Preview
 @Composable
-fun HomeScreen() {
+fun DashboardScreen() {
+    val context = LocalContext.current
+    val username = remember { getUsername(context) }
+
     val quotes = listOf(
         "The only bad workout is the one that didn't happen.",
         "Push yourself, because no one else is going to do it for you.",
@@ -38,49 +47,17 @@ fun HomeScreen() {
         horizontalAlignment = Alignment.CenterHorizontally,
     ) {
         Text(
-            text = "Welcome \n to your \n fitness \n journey",
+            text = "Welcome $username,",
             fontSize = 30.sp,
             fontWeight = FontWeight.Bold,
             modifier = Modifier.padding(bottom = 50.dp)
         )
-        Text(
-            text = currentQuote,
-            fontSize = 18.sp,
-            fontWeight = FontWeight.Medium
-        )
-        Text(
-            text = "Welcome \n to your \n fitness \n journey",
-            fontSize = 30.sp,
-            fontWeight = FontWeight.Bold,
-            modifier = Modifier.padding(bottom = 50.dp)
-        )
-        Text(
-            text = currentQuote,
-            fontSize = 18.sp,
-            fontWeight = FontWeight.Medium
-        )
-        Text(
-            text = "Welcome \n to your \n fitness \n journey",
-            fontSize = 30.sp,
-            fontWeight = FontWeight.Bold,
-            modifier = Modifier.padding(bottom = 50.dp)
-        )
-        Text(
-            text = currentQuote,
-            fontSize = 18.sp,
-            fontWeight = FontWeight.Medium
-        )
-        Text(
-            text = "Welcome \n to your \n fitness \n journey",
-            fontSize = 30.sp,
-            fontWeight = FontWeight.Bold,
-            modifier = Modifier.padding(bottom = 50.dp)
-        )
-        Text(
-            text = currentQuote,
-            fontSize = 18.sp,
-            fontWeight = FontWeight.Medium
-        )
+        
 
+        Text(
+            text = currentQuote,
+            fontSize = 18.sp,
+            fontWeight = FontWeight.Medium
+        )
     }
 }

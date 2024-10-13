@@ -1,4 +1,5 @@
-package com.example.fitnessappcompose.ui.screens
+// ProfileSetupScreen.kt
+package com.example.fitnessappcompose.ui.screens.setup
 
 import android.graphics.Bitmap
 import android.graphics.ImageDecoder
@@ -22,11 +23,11 @@ import androidx.compose.ui.graphics.vector.ImageVector
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.vectorResource
 import androidx.compose.ui.text.input.KeyboardType
-import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.navigation.NavController
 import androidx.navigation.compose.rememberNavController
 import com.example.fitnessappcompose.R
+import com.example.fitnessappcompose.utils.*
 
 @Composable
 fun ProfileSetupScreen(onProfileSetupComplete: () -> Unit, navController: NavController) {
@@ -38,6 +39,7 @@ fun ProfileSetupScreen(onProfileSetupComplete: () -> Unit, navController: NavCon
     var weight by remember { mutableStateOf("") }
     var imageUri by remember { mutableStateOf<Uri?>(null) }
     var bitmap by remember { mutableStateOf<Bitmap?>(null) }
+    var errorMessage by remember { mutableStateOf("") }
     val context = LocalContext.current
 
     val launcher = rememberLauncherForActivityResult(
@@ -133,17 +135,31 @@ fun ProfileSetupScreen(onProfileSetupComplete: () -> Unit, navController: NavCon
         }
         Spacer(modifier = Modifier.height(16.dp))
 
+        if (errorMessage.isNotEmpty()) {
+            Text(text = errorMessage, color = MaterialTheme.colorScheme.error)
+            Spacer(modifier = Modifier.height(16.dp))
+        }
+
         Button(onClick = {
-            Log.d("ProfileSetupScreen", "Complete Setup button clicked")
-            try {
-                // Save profile data (e.g., to SharedPreferences or a database)
-                onProfileSetupComplete()
-                navController.navigate("setup_goal")
-            } catch (e: Exception) {
-                Log.e("ProfileSetupScreen", "Error completing setup", e)
+            Log.d("ProfileSetupScreen", "Next button clicked")
+            if (fullName.isEmpty() || username.isEmpty() || gender.isEmpty() || age.isEmpty() || height.isEmpty() || weight.isEmpty()) {
+                errorMessage = "All fields are required"
+            } else {
+                try {
+                    setFullName(context, fullName)
+                    setUsername(context, username)
+                    setGender(context, gender)
+                    setAge(context, age)
+                    setHeight(context, height)
+                    setWeight(context, weight)
+                    onProfileSetupComplete()
+                    navController.navigate("setup_goal")
+                } catch (e: Exception) {
+                    Log.e("ProfileSetupScreen", "Error completing setup", e)
+                }
             }
         }) {
-            Text("Complete Setup")
+            Text("Next")
         }
     }
 }
@@ -167,11 +183,4 @@ fun ProfileTextField(
         Spacer(modifier = Modifier.height(8.dp))
         Text(text = label)
     }
-}
-
-@Preview(showBackground = true)
-@Composable
-fun ProfileSetupScreenPreview() {
-    val navController = rememberNavController()
-    ProfileSetupScreen(onProfileSetupComplete = {}, navController = navController)
 }
