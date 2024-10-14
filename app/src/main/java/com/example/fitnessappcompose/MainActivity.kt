@@ -17,6 +17,8 @@ import com.example.fitnessappcompose.ui.screens.setup.ProfileSetupScreen
 import com.example.fitnessappcompose.ui.startup.StartupAnimation
 import com.example.fitnessappcompose.utils.isUserProfileSetUp
 import com.example.fitnessappcompose.utils.setUserProfileSetUp
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.launch
 
 class MainActivity : ComponentActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -25,16 +27,25 @@ class MainActivity : ComponentActivity() {
         setContent {
             AppTheme {
                 var showAnimation by remember { mutableStateOf(true) }
-                var showProfileSetup by remember { mutableStateOf(!isUserProfileSetUp(this)) }
+                var showProfileSetup by remember { mutableStateOf(false) }
                 val navController = rememberNavController()
+                val coroutineScope = rememberCoroutineScope()
+
+                LaunchedEffect(Unit) {
+                    coroutineScope.launch(Dispatchers.IO) {
+                        showProfileSetup = !isUserProfileSetUp(this@MainActivity)
+                    }
+                }
 
                 if (showAnimation) {
                     StartupAnimation(onAnimationEnd = { showAnimation = false })
                 } else if (showProfileSetup) {
                     ProfileSetupScreen(onProfileSetupComplete = {
-                        setUserProfileSetUp(this)
-                        showProfileSetup = false
-                        navController.navigate("setup_goal") // Ensure navigation to setup_goal
+                        coroutineScope.launch(Dispatchers.IO) {
+                            setUserProfileSetUp(this@MainActivity)
+                            showProfileSetup = false
+                            navController.navigate("setup_goal")
+                        }
                     }, navController = navController)
                 } else {
                     Scaffold(
