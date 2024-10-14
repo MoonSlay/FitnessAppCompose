@@ -15,13 +15,13 @@ import com.example.fitnessappcompose.ui.screens.TrainingScreen
 
 @Composable
 fun NavigationGraph(navController: NavHostController, modifier: Modifier = Modifier) {
-    NavHost(navController, startDestination = "Dashboard", modifier = modifier) {
-        composable("Dashboard") { DashboardScreen() }
-        composable("Recipe") { RecipeScreen() }
-        composable("Training") { TrainingScreen() }
-        composable("Report") { ReportScreen() }
-        composable("Profile") { ProfileScreen(navController = navController) }
-        composable("setup_goal") { SetupGoalScreen(navController = navController) }
-        composable("profile_data") { ProfileDataScreen(navController = navController) }
+    NavHost(navController, startDestination = Screen.Dashboard.route, modifier = modifier) {
+        composable(Screen.Dashboard.route) { DashboardScreen() }
+        composable(Screen.Recipe.route) { RecipeScreen() }
+        composable(Screen.Training.route) { TrainingScreen() }
+        composable(Screen.Report.route) { ReportScreen() }
+        composable(Screen.Profile.route) { ProfileScreen(navController = navController) }
+        composable(Screen.SetupGoal.route) { SetupGoalScreen(navController = navController) }
+        composable(Screen.ProfileData.route) { ProfileDataScreen(navController = navController) }
     }
 }

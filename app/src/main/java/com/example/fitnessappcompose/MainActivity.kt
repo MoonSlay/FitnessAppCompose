@@ -13,6 +13,7 @@ import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.padding
 import androidx.compose.material3.Scaffold
 import androidx.compose.runtime.*
+import androidx.compose.runtime.saveable.rememberSaveable
 import androidx.compose.ui.Modifier
 import androidx.navigation.compose.rememberNavController
 import com.example.compose.AppTheme
@@ -22,11 +23,9 @@ import com.example.fitnessappcompose.ui.screens.setup.ProfileSetupScreen
 import com.example.fitnessappcompose.ui.startup.StartupAnimation
 import com.example.fitnessappcompose.utils.isUserProfileSetUp
 import com.example.fitnessappcompose.utils.setUserProfileSetUp
-import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.update
-import kotlinx.coroutines.launch
 
 class MainActivity : ComponentActivity(), SensorEventListener {
 
@@ -44,19 +43,30 @@ class MainActivity : ComponentActivity(), SensorEventListener {
         enableEdgeToEdge()
 
         sensor = sensorManager.getDefaultSensor(Sensor.TYPE_STEP_DETECTOR)
-        sensorManager.registerListener(this, sensor!!, SensorManager.SENSOR_DELAY_FASTEST)
 
         setContent {
             AppTheme {
-                var showAnimation by remember { mutableStateOf(false) } // Set to false to skip animation
-                var showProfileSetup by remember { mutableStateOf(!isUserProfileSetUp(this)) }
+                var showAnimation by rememberSaveable { mutableStateOf(false) } // Set to false to skip animation
+                var showProfileSetup by rememberSaveable { mutableStateOf(!isUserProfileSetUp(this)) }
                 val navController = rememberNavController()
+
+                LaunchedEffect(Unit) {
+                    sensor?.let {
+                        sensorManager.registerListener(this@MainActivity, it, SensorManager.SENSOR_DELAY_FASTEST)
+                    }
+                }
+
+                DisposableEffect(Unit) {
+                    onDispose {
+                        sensorManager.unregisterListener(this@MainActivity)
+                    }
+                }
 
                 if (showAnimation) {
                     StartupAnimation(onAnimationEnd = { showAnimation = false })
                 } else if (showProfileSetup) {
                     ProfileSetupScreen(onProfileSetupComplete = {
-                        setUserProfileSetUp(this)
+                        setUserProfileSetUp(this@MainActivity)
                         showProfileSetup = false
                         navController.navigate("setup_goal") // Ensure navigation to setup_goal
                     }, navController = navController)
@@ -84,4 +94,3 @@ class MainActivity : ComponentActivity(), SensorEventListener {
         // Not used
     }
 }
-
