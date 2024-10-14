@@ -19,6 +19,7 @@ import com.example.compose.AppTheme
 import com.example.fitnessappcompose.navigation.BottomNavigationBar
 import com.example.fitnessappcompose.navigation.NavigationGraph
 import com.example.fitnessappcompose.ui.screens.setup.ProfileSetupScreen
+import com.example.fitnessappcompose.ui.startup.StartupAnimation
 import com.example.fitnessappcompose.utils.isUserProfileSetUp
 import com.example.fitnessappcompose.utils.setUserProfileSetUp
 import kotlinx.coroutines.Dispatchers
@@ -48,23 +49,16 @@ class MainActivity : ComponentActivity(), SensorEventListener {
         setContent {
             AppTheme {
                 var showAnimation by remember { mutableStateOf(false) } // Set to false to skip animation
-                var showProfileSetup by remember { mutableStateOf(false) }
+                var showProfileSetup by remember { mutableStateOf(!isUserProfileSetUp(this)) }
                 val navController = rememberNavController()
-                val coroutineScope = rememberCoroutineScope()
 
-                LaunchedEffect(Unit) {
-                    coroutineScope.launch(Dispatchers.IO) {
-                        showProfileSetup = !isUserProfileSetUp(this@MainActivity)
-                    }
-                }
-
-                if (showProfileSetup) {
+                if (showAnimation) {
+                    StartupAnimation(onAnimationEnd = { showAnimation = false })
+                } else if (showProfileSetup) {
                     ProfileSetupScreen(onProfileSetupComplete = {
-                        coroutineScope.launch(Dispatchers.IO) {
-                            setUserProfileSetUp(this@MainActivity)
-                            showProfileSetup = false
-                            navController.navigate("setup_goal")
-                        }
+                        setUserProfileSetUp(this)
+                        showProfileSetup = false
+                        navController.navigate("setup_goal") // Ensure navigation to setup_goal
                     }, navController = navController)
                 } else {
                     Scaffold(
