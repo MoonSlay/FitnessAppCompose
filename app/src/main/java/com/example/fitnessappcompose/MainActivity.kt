@@ -26,7 +26,7 @@ class MainActivity : ComponentActivity() {
         enableEdgeToEdge()
         setContent {
             AppTheme {
-                var showAnimation by remember { mutableStateOf(true) }
+                var showAnimation by remember { mutableStateOf(false) } // Set to false to skip animation
                 var showProfileSetup by remember { mutableStateOf(false) }
                 val navController = rememberNavController()
                 val coroutineScope = rememberCoroutineScope()
@@ -37,9 +37,13 @@ class MainActivity : ComponentActivity() {
                     }
                 }
 
+                // Comment out the StartupAnimation block
+                /*
                 if (showAnimation) {
                     StartupAnimation(onAnimationEnd = { showAnimation = false })
-                } else if (showProfileSetup) {
+                } else
+                */
+                if (showProfileSetup) {
                     ProfileSetupScreen(onProfileSetupComplete = {
                         coroutineScope.launch(Dispatchers.IO) {
                             setUserProfileSetUp(this@MainActivity)
