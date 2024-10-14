@@ -1,5 +1,10 @@
 package com.example.fitnessappcompose
 
+import android.content.Context
+import android.hardware.Sensor
+import android.hardware.SensorEvent
+import android.hardware.SensorEventListener
+import android.hardware.SensorManager
 import android.os.Bundle
 import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
@@ -14,16 +19,32 @@ import com.example.compose.AppTheme
 import com.example.fitnessappcompose.navigation.BottomNavigationBar
 import com.example.fitnessappcompose.navigation.NavigationGraph
 import com.example.fitnessappcompose.ui.screens.setup.ProfileSetupScreen
-import com.example.fitnessappcompose.ui.startup.StartupAnimation
 import com.example.fitnessappcompose.utils.isUserProfileSetUp
 import com.example.fitnessappcompose.utils.setUserProfileSetUp
 import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.flow.MutableStateFlow
+import kotlinx.coroutines.flow.StateFlow
+import kotlinx.coroutines.flow.update
 import kotlinx.coroutines.launch
 
-class MainActivity : ComponentActivity() {
+class MainActivity : ComponentActivity(), SensorEventListener {
+
+    private val sensorManager: SensorManager by lazy {
+        getSystemService(Context.SENSOR_SERVICE) as SensorManager
+    }
+
+    private var sensor: Sensor? = null
+
+    private val _stepCount = MutableStateFlow(0)
+    val stepCount: StateFlow<Int> get() = _stepCount
+
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         enableEdgeToEdge()
+
+        sensor = sensorManager.getDefaultSensor(Sensor.TYPE_STEP_DETECTOR)
+        sensorManager.registerListener(this, sensor!!, SensorManager.SENSOR_DELAY_FASTEST)
+
         setContent {
             AppTheme {
                 var showAnimation by remember { mutableStateOf(false) } // Set to false to skip animation
@@ -37,12 +58,6 @@ class MainActivity : ComponentActivity() {
                     }
                 }
 
-                // Comment out the StartupAnimation block
-                /*
-                if (showAnimation) {
-                    StartupAnimation(onAnimationEnd = { showAnimation = false })
-                } else
-                */
                 if (showProfileSetup) {
                     ProfileSetupScreen(onProfileSetupComplete = {
                         coroutineScope.launch(Dispatchers.IO) {
@@ -62,4 +77,17 @@ class MainActivity : ComponentActivity() {
             }
         }
     }
+
+    override fun onSensorChanged(sensorEvent: SensorEvent?) {
+        sensorEvent?.let { event ->
+            if (event.sensor.type == Sensor.TYPE_STEP_DETECTOR) {
+                _stepCount.update { it + 1 }
+            }
+        }
+    }
+
+    override fun onAccuracyChanged(sensor: Sensor?, accuracy: Int) {
+        // Not used
+    }
 }
+

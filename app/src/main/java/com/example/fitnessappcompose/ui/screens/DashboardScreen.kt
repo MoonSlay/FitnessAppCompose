@@ -1,6 +1,8 @@
 package com.example.fitnessappcompose.ui.screens
 
+import android.app.Activity
 import android.content.Context
+import android.content.pm.PackageManager
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.material3.CardDefaults
@@ -14,14 +16,23 @@ import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
+import androidx.core.app.ActivityCompat
+import androidx.core.content.ContextCompat
+import com.example.fitnessappcompose.MainActivity
 import com.example.fitnessappcompose.utils.getUsername
 import kotlinx.coroutines.delay
+import kotlinx.coroutines.flow.collect
+import kotlinx.coroutines.flow.onEach
+import android.Manifest
 
 @Preview
 @Composable
 fun DashboardScreen() {
+    RequestActivityRecognitionPermission()
     val context = LocalContext.current
     val username = remember { getUsername(context) }
+    val mainActivity = context as MainActivity
+    val stepCount by mainActivity.stepCount.collectAsState(initial = 0)
 
     val quotes = listOf(
         "The only bad workout is the one that didn't happen.",
@@ -56,7 +67,7 @@ fun DashboardScreen() {
         }
 
         item {
-            DailyGoalsCard()
+            DailyGoalsCard(stepCount)
         }
 
         item {
@@ -71,7 +82,7 @@ fun DashboardScreen() {
 }
 
 @Composable
-fun DailyGoalsCard() {
+fun DailyGoalsCard(stepCount: Int) {
     ElevatedCard(
         modifier = Modifier
             .fillMaxWidth()
@@ -97,7 +108,7 @@ fun DailyGoalsCard() {
                     horizontalAlignment = Alignment.CenterHorizontally,
                     modifier = Modifier.weight(0.35f)
                 ) {
-                    GoalCard("0/100")
+                    GoalCard("$stepCount/100")
                     Text(
                         text = "Steps Taken",
                         fontSize = 10.sp,
@@ -120,6 +131,7 @@ fun DailyGoalsCard() {
         }
     }
 }
+
 @Composable
 fun GoalCard(text: String, modifier: Modifier = Modifier) {
     ElevatedCard(
@@ -137,5 +149,15 @@ fun GoalCard(text: String, modifier: Modifier = Modifier) {
                 fontWeight = FontWeight.Medium
             )
         }
+    }
+}
+
+@Composable
+fun RequestActivityRecognitionPermission() {
+    val context = LocalContext.current
+    val activity = context as Activity
+
+    if (ContextCompat.checkSelfPermission(context, Manifest.permission.ACTIVITY_RECOGNITION) != PackageManager.PERMISSION_GRANTED) {
+        ActivityCompat.requestPermissions(activity, arrayOf(Manifest.permission.ACTIVITY_RECOGNITION), 1)
     }
 }
