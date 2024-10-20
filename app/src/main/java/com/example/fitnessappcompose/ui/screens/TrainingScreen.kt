@@ -16,6 +16,7 @@ import androidx.compose.ui.unit.dp
 import androidx.navigation.NavController
 import com.example.fitnessappcompose.R
 import kotlinx.coroutines.launch
+import kotlinx.coroutines.CoroutineScope
 import androidx.compose.material3.rememberBottomSheetScaffoldState
 import androidx.compose.material3.BottomSheetScaffold
 import androidx.compose.material3.ExperimentalMaterial3Api
@@ -23,11 +24,17 @@ import androidx.compose.runtime.saveable.rememberSaveable
 import androidx.compose.runtime.saveable.Saver
 import androidx.compose.runtime.saveable.listSaver
 
+data class Exercise(
+    val name: String,
+    val description: String,
+    val imageResId: Int
+)
+
 data class Training(
     val imageResId: Int,
     val name: String,
     val description: String,
-    val exercises: List<String>,
+    val exercises: List<Exercise>,
     val instructions: String,
     val duration: String
 )
@@ -36,7 +43,10 @@ val defaultTraining = Training(
     imageResId = R.drawable.breakfast_protein_smoothie,
     name = "Default Training",
     description = "Default description",
-    exercises = listOf("Default exercise"),
+    exercises = listOf(
+        Exercise("Default Exercise 1", "Default description 1", R.drawable.breakfast_steak_eggs),
+        Exercise("Default Exercise 2", "Default description 2", R.drawable.breakfast_tofu_scramble)
+    ),
     instructions = "Default instructions",
     duration = "Default duration"
 )
@@ -44,36 +54,8 @@ val defaultTraining = Training(
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun TrainingScreen(navController: NavController) {
-    val sections = listOf(
-        Triple("Morning Workouts", "Start your day with these energizing workouts", listOf(
-            Training(
-                R.drawable.ic_recipe,
-                "Morning Yoga",
-                "A relaxing yoga session to start your day.",
-                exercises = listOf("Sun Salutation", "Downward Dog", "Child's Pose"),
-                instructions = "1. Start with Sun Salutation...\n2. Move to Downward Dog...\n3. Finish with Child's Pose...",
-                duration = "30 minutes"
-            ),
-            Training(
-                R.drawable.ic_recipe,
-                "Cardio Blast",
-                "High-intensity cardio workout.",
-                exercises = listOf("Jumping Jacks", "Burpees", "High Knees"),
-                instructions = "1. Start with Jumping Jacks...\n2. Move to Burpees...\n3. Finish with High Knees...",
-                duration = "20 minutes"
-            ),
-            Training(
-                R.drawable.ic_recipe,
-                "Strength Training",
-                "Build muscle with this strength training routine.",
-                exercises = listOf("Push-ups", "Squats", "Lunges"),
-                instructions = "1. Start with Push-ups...\n2. Move to Squats...\n3. Finish with Lunges...",
-                duration = "40 minutes"
-            )
-        )),
-        // Add more sections here
-    )
-
+    val exercises = getExercises()
+    val sections = getSections(exercises)
     val bottomSheetScaffoldState = rememberBottomSheetScaffoldState()
     val coroutineScope = rememberCoroutineScope()
     var selectedTraining by rememberSaveable(stateSaver = TrainingSaver) { mutableStateOf(defaultTraining) }
@@ -85,20 +67,72 @@ fun TrainingScreen(navController: NavController) {
         },
         sheetPeekHeight = 0.dp
     ) {
-        LazyColumn(
-            modifier = Modifier
-                .fillMaxSize()
-                .padding(16.dp)
-        ) {
-            sections.forEach { (title, description, trainings) ->
-                item {
-                    Section(title, description, trainings) { training ->
-                        coroutineScope.launch {
-                            selectedTraining = training
-                            bottomSheetScaffoldState.bottomSheetState.expand()
-                        }
+        TrainingList(sections, selectedTraining, bottomSheetScaffoldState, coroutineScope)
+    }
+}
+
+@OptIn(ExperimentalMaterial3Api::class)
+@Composable
+fun TrainingList(
+    sections: List<Triple<String, String, List<Training>>>,
+    selectedTraining: Training,
+    bottomSheetScaffoldState: BottomSheetScaffoldState,
+    coroutineScope: CoroutineScope
+) {
+    LazyColumn(
+        modifier = Modifier
+            .fillMaxSize()
+            .padding(16.dp)
+    ) {
+        sections.forEach { (title, description, trainings) ->
+            item {
+                Section(title, description, trainings) { training ->
+                    coroutineScope.launch {
+                        bottomSheetScaffoldState.bottomSheetState.expand()
                     }
                 }
+            }
+        }
+        item {
+            Spacer(modifier = Modifier.height(16.dp))
+            Text(text = "All Exercises", style = MaterialTheme.typography.headlineSmall)
+            Spacer(modifier = Modifier.height(8.dp))
+            ExerciseList(sections)
+        }
+    }
+}
+
+@Composable
+fun ExerciseList(sections: List<Triple<String, String, List<Training>>>) {
+    Column {
+        sections.flatMap { it.third }.flatMap { it.exercises }.distinct().forEach { exercise ->
+            ExerciseCard(exercise)
+        }
+    }
+}
+
+@Composable
+fun ExerciseCard(exercise: Exercise) {
+    Surface(
+        modifier = Modifier
+            .fillMaxWidth()
+            .padding(vertical = 4.dp),
+        shape = MaterialTheme.shapes.medium,
+        tonalElevation = 2.dp
+    ) {
+        Row(
+            verticalAlignment = Alignment.CenterVertically,
+            modifier = Modifier.padding(8.dp)
+        ) {
+            Image(
+                painter = painterResource(id = exercise.imageResId),
+                contentDescription = exercise.name,
+                modifier = Modifier.size(64.dp)
+            )
+            Spacer(modifier = Modifier.width(16.dp))
+            Column {
+                Text(text = exercise.name, style = MaterialTheme.typography.bodyMedium)
+                Text(text = exercise.description, style = MaterialTheme.typography.bodySmall)
             }
         }
     }
@@ -131,7 +165,8 @@ fun BottomSheetContent(training: Training, navController: NavController) {
             Spacer(modifier = Modifier.height(16.dp))
             Text(text = "Exercises", style = MaterialTheme.typography.headlineSmall)
             training.exercises.forEach { exercise ->
-                Text(text = exercise, style = MaterialTheme.typography.bodyMedium)
+                Text(text = exercise.name, style = MaterialTheme.typography.bodyMedium)
+                Text(text = exercise.description, style = MaterialTheme.typography.bodySmall)
             }
             Spacer(modifier = Modifier.height(16.dp))
             Text(text = "Instructions", style = MaterialTheme.typography.headlineSmall)
@@ -147,6 +182,7 @@ fun BottomSheetContent(training: Training, navController: NavController) {
     }
 }
 
+@OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun Section(title: String, description: String, trainings: List<Training>, onTrainingClick: (Training) -> Unit) {
     Column {
@@ -159,7 +195,6 @@ fun Section(title: String, description: String, trainings: List<Training>, onTra
         Spacer(modifier = Modifier.height(16.dp))
     }
 }
-
 @Composable
 fun TrainingCard(training: Training, onTrainingClick: (Training) -> Unit) {
     ElevatedCard(
@@ -182,11 +217,8 @@ fun TrainingCard(training: Training, onTrainingClick: (Training) -> Unit) {
                     .clip(CircleShape)
             )
             Spacer(modifier = Modifier.width(16.dp))
-            Column(
-                verticalArrangement = Arrangement.Center,
-                modifier = Modifier.fillMaxHeight()
-            ) {
-                Text(text = training.name, style = MaterialTheme.typography.bodyLarge)
+            Column {
+                Text(text = training.name, style = MaterialTheme.typography.bodyMedium)
                 Text(text = training.description, style = MaterialTheme.typography.bodySmall)
             }
         }
@@ -199,7 +231,7 @@ val TrainingSaver: Saver<Training, Any> = listSaver(
             training.imageResId,
             training.name,
             training.description,
-            training.exercises,
+            training.exercises.map { listOf(it.name, it.description, it.imageResId) }, // Save exercises as a list of lists
             training.instructions,
             training.duration
         )
@@ -209,9 +241,55 @@ val TrainingSaver: Saver<Training, Any> = listSaver(
             imageResId = list[0] as Int,
             name = list[1] as String,
             description = list[2] as String,
-            exercises = list[3] as List<String>,
+            exercises = (list[3] as List<List<Any>>).map { Exercise(it[0] as String, it[1] as String, it[2] as Int) }, // Restore exercises from a list of lists
             instructions = list[4] as String,
             duration = list[5] as String
         )
     }
 )
+
+fun getExercises(): List<Exercise> {
+    return listOf(
+        Exercise("Sun Salutation", "A series of poses to warm up the body.", R.drawable.breakfast_steak_eggs),
+        Exercise("Downward Dog", "A foundational yoga pose.", R.drawable.breakfast_protein_smoothie),
+        Exercise("Child's Pose", "A resting pose.", R.drawable.breakfast_quinoa_stuffed_peppers),
+        Exercise("Jumping Jacks", "A full-body exercise.", R.drawable.breakfast_tofu_scramble),
+        Exercise("Burpees", "A high-intensity full-body exercise.", R.drawable.breakfast_buckwheat_pancakes),
+        Exercise("High Knees", "A cardio exercise.", R.drawable.breakfast_chickpea_salad_sandwich),
+        Exercise("Push-ups", "An upper body strength exercise.", R.drawable.breakfast_quinoa_stuffed_peppers),
+        Exercise("Squats", "A lower body strength exercise.", R.drawable.breakfast_buckwheat_pancakes),
+        Exercise("Lunges", "A lower body exercise.", R.drawable.breakfast_buckwheat_pancakes)
+    )
+}
+
+fun getSections(exercises: List<Exercise>): List<Triple<String, String, List<Training>>> {
+    return listOf(
+        Triple("Morning Workouts", "Start your day with these energizing workouts", listOf(
+            Training(
+                R.drawable.ic_recipe,
+                "Morning Yoga",
+                "A relaxing yoga session to start your day.",
+                exercises = exercises.subList(0, 3),
+                instructions = "1. Start with Sun Salutation...\n2. Move to Downward Dog...\n3. Finish with Child's Pose...",
+                duration = "30 minutes"
+            ),
+            Training(
+                R.drawable.ic_recipe,
+                "Cardio Blast",
+                "High-intensity cardio workout.",
+                exercises = exercises.subList(3, 6),
+                instructions = "1. Start with Jumping Jacks...\n2. Move to Burpees...\n3. Finish with High Knees...",
+                duration = "20 minutes"
+            ),
+            Training(
+                R.drawable.ic_recipe,
+                "Strength Training",
+                "Build muscle with this strength training routine.",
+                exercises = exercises.subList(6, 9),
+                instructions = "1. Start with Push-ups...\n2. Move to Squats...\n3. Finish with Lunges...",
+                duration = "40 minutes"
+            )
+        ))
+        // Add more sections here
+    )
+}
