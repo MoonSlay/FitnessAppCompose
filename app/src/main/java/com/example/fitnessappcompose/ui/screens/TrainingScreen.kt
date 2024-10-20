@@ -13,6 +13,7 @@ import androidx.compose.ui.draw.clip
 import androidx.compose.ui.platform.LocalConfiguration
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.unit.dp
+import androidx.navigation.NavController
 import com.example.fitnessappcompose.R
 import kotlinx.coroutines.launch
 import androidx.compose.material3.rememberBottomSheetScaffoldState
@@ -42,7 +43,7 @@ val defaultTraining = Training(
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
-fun TrainingScreen() {
+fun TrainingScreen(navController: NavController) {
     val sections = listOf(
         Triple("Morning Workouts", "Start your day with these energizing workouts", listOf(
             Training(
@@ -53,7 +54,22 @@ fun TrainingScreen() {
                 instructions = "1. Start with Sun Salutation...\n2. Move to Downward Dog...\n3. Finish with Child's Pose...",
                 duration = "30 minutes"
             ),
-            // Add more Training objects here
+            Training(
+                R.drawable.ic_recipe,
+                "Cardio Blast",
+                "High-intensity cardio workout.",
+                exercises = listOf("Jumping Jacks", "Burpees", "High Knees"),
+                instructions = "1. Start with Jumping Jacks...\n2. Move to Burpees...\n3. Finish with High Knees...",
+                duration = "20 minutes"
+            ),
+            Training(
+                R.drawable.ic_recipe,
+                "Strength Training",
+                "Build muscle with this strength training routine.",
+                exercises = listOf("Push-ups", "Squats", "Lunges"),
+                instructions = "1. Start with Push-ups...\n2. Move to Squats...\n3. Finish with Lunges...",
+                duration = "40 minutes"
+            )
         )),
         // Add more sections here
     )
@@ -65,7 +81,7 @@ fun TrainingScreen() {
     BottomSheetScaffold(
         scaffoldState = bottomSheetScaffoldState,
         sheetContent = {
-            BottomSheetContent(selectedTraining)
+            BottomSheetContent(selectedTraining, navController)
         },
         sheetPeekHeight = 0.dp
     ) {
@@ -89,7 +105,7 @@ fun TrainingScreen() {
 }
 
 @Composable
-fun BottomSheetContent(training: Training) {
+fun BottomSheetContent(training: Training, navController: NavController) {
     val configuration = LocalConfiguration.current
     val screenHeight = configuration.screenHeightDp.dp
 
@@ -123,6 +139,10 @@ fun BottomSheetContent(training: Training) {
             Spacer(modifier = Modifier.height(16.dp))
             Text(text = "Duration", style = MaterialTheme.typography.headlineSmall)
             Text(text = training.duration, style = MaterialTheme.typography.bodyMedium)
+            Spacer(modifier = Modifier.height(16.dp))
+            Button(onClick = { navController.navigate("trainingDetail/${training.name}") }) {
+                Text("Go to Training Detail")
+            }
         }
     }
 }
