@@ -44,6 +44,10 @@ class MainActivity : ComponentActivity(), SensorEventListener {
 
         sensor = sensorManager.getDefaultSensor(Sensor.TYPE_STEP_DETECTOR)
 
+        // Retrieve step count from SharedPreferences
+        val sharedPreferences = getSharedPreferences("user_prefs", Context.MODE_PRIVATE)
+        _stepCount.value = sharedPreferences.getInt("step_count", 0)
+
         setContent {
             AppTheme {
                 val navController = rememberNavController()
@@ -53,7 +57,6 @@ class MainActivity : ComponentActivity(), SensorEventListener {
                 // Check login state from SharedPreferences
                 val context = LocalContext.current
                 LaunchedEffect(Unit) {
-                    val sharedPreferences = context.getSharedPreferences("user_prefs", Context.MODE_PRIVATE)
                     val rememberMe = sharedPreferences.getBoolean("remember_me", false)
                     if (rememberMe) {
                         authViewModel.login()
@@ -101,6 +104,12 @@ class MainActivity : ComponentActivity(), SensorEventListener {
         sensorEvent?.let { event ->
             if (event.sensor.type == Sensor.TYPE_STEP_DETECTOR) {
                 _stepCount.update { it + 1 }
+                // Save step count to SharedPreferences
+                val sharedPreferences = getSharedPreferences("user_prefs", Context.MODE_PRIVATE)
+                with(sharedPreferences.edit()) {
+                    putInt("step_count", _stepCount.value)
+                    apply()
+                }
             }
         }
     }

@@ -21,8 +21,6 @@ import androidx.core.content.ContextCompat
 import com.example.fitnessappcompose.MainActivity
 import com.example.fitnessappcompose.utils.getUsername
 import kotlinx.coroutines.delay
-import kotlinx.coroutines.flow.collect
-import kotlinx.coroutines.flow.onEach
 import android.Manifest
 
 @Preview
