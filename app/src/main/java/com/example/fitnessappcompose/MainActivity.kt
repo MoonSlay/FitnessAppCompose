@@ -1,3 +1,4 @@
+// MainActivity.kt
 package com.example.fitnessappcompose
 
 import android.content.Context
@@ -6,6 +7,7 @@ import android.hardware.SensorEvent
 import android.hardware.SensorEventListener
 import android.hardware.SensorManager
 import android.os.Bundle
+import android.util.Log
 import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
 import androidx.activity.enableEdgeToEdge
@@ -15,14 +17,12 @@ import androidx.compose.material3.Scaffold
 import androidx.compose.runtime.*
 import androidx.compose.runtime.saveable.rememberSaveable
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.platform.LocalContext
+import androidx.lifecycle.viewmodel.compose.viewModel
 import androidx.navigation.compose.rememberNavController
 import com.example.compose.AppTheme
 import com.example.fitnessappcompose.navigation.BottomNavigationBar
 import com.example.fitnessappcompose.navigation.NavigationGraph
-import com.example.fitnessappcompose.ui.screens.setup.ProfileSetupScreen
-import com.example.fitnessappcompose.ui.startup.StartupAnimation
-import com.example.fitnessappcompose.utils.isUserProfileSetUp
-import com.example.fitnessappcompose.utils.setUserProfileSetUp
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.update
@@ -46,9 +46,27 @@ class MainActivity : ComponentActivity(), SensorEventListener {
 
         setContent {
             AppTheme {
-                var showAnimation by rememberSaveable { mutableStateOf(false) } // Set to false to skip animation
-                var showProfileSetup by rememberSaveable { mutableStateOf(!isUserProfileSetUp(this)) }
                 val navController = rememberNavController()
+                val authViewModel: AuthViewModel = viewModel()
+                val isLoggedIn by authViewModel.isLoggedIn.collectAsState()
+
+                // Check login state from SharedPreferences
+                val context = LocalContext.current
+                LaunchedEffect(Unit) {
+                    val sharedPreferences = context.getSharedPreferences("user_prefs", Context.MODE_PRIVATE)
+                    val rememberMe = sharedPreferences.getBoolean("remember_me", false)
+                    if (rememberMe) {
+                        authViewModel.login()
+                    }
+                }
+
+                LaunchedEffect(isLoggedIn) {
+                    if (isLoggedIn) {
+                        navController.navigate("dashboard") {
+                            popUpTo("login") { inclusive = true }
+                        }
+                    }
+                }
 
                 LaunchedEffect(Unit) {
                     sensor?.let {
@@ -62,21 +80,18 @@ class MainActivity : ComponentActivity(), SensorEventListener {
                     }
                 }
 
-                if (showAnimation) {
-                    StartupAnimation(onAnimationEnd = { showAnimation = false })
-                } else if (showProfileSetup) {
-                    ProfileSetupScreen(onProfileSetupComplete = {
-                        setUserProfileSetUp(this@MainActivity)
-                        showProfileSetup = false
-                        navController.navigate("setup_goal") // Ensure navigation to setup_goal
-                    }, navController = navController)
-                } else {
-                    Scaffold(
-                        bottomBar = { BottomNavigationBar(navController) },
-                        modifier = Modifier.fillMaxSize()
-                    ) { innerPadding ->
-                        NavigationGraph(navController, Modifier.padding(innerPadding))
-                    }
+                Scaffold(
+                    bottomBar = {
+                        if (isLoggedIn) {
+                            Log.d("MainActivity", "BottomNavigationBar is displayed")
+                            BottomNavigationBar(navController)
+                        } else {
+                            Log.d("MainActivity", "BottomNavigationBar is not displayed")
+                        }
+                    },
+                    modifier = Modifier.fillMaxSize()
+                ) { innerPadding ->
+                    NavigationGraph(navController, Modifier.padding(innerPadding))
                 }
             }
         }

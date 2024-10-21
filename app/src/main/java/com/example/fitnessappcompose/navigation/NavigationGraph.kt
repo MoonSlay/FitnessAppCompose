@@ -1,4 +1,3 @@
-// NavigationGraph.kt
 package com.example.fitnessappcompose.navigation
 
 import androidx.compose.runtime.Composable
@@ -7,18 +6,20 @@ import androidx.navigation.NavHostController
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import com.example.fitnessappcompose.ui.screens.*
-import com.example.fitnessappcompose.ui.screens.setup.SetupGoalScreen
+import com.example.fitnessappcompose.ui.screens.auth.LoginScreen
+import com.example.fitnessappcompose.ui.screens.auth.RegisterScreen
 
 @Composable
 fun NavigationGraph(navController: NavHostController, modifier: Modifier = Modifier) {
-    NavHost(navController, startDestination = Screen.Dashboard.route, modifier = modifier) {
-        composable(Screen.Dashboard.route) { DashboardScreen() }
-        composable(Screen.Recipe.route) { RecipeScreen() }
-        composable(Screen.Training.route) { TrainingScreen(navController = navController) }
-        composable(Screen.Report.route) { ReportScreen() }
-        composable(Screen.Profile.route) { ProfileScreen(navController = navController) }
-        composable(Screen.SetupGoal.route) { SetupGoalScreen(navController = navController) }
-        composable(Screen.ProfileData.route) { ProfileDataScreen(navController = navController) }
+    NavHost(navController, startDestination = "login", modifier = modifier) {
+        composable("login") { LoginScreen(navController = navController) }
+        composable("register") { RegisterScreen(navController = navController) }
+        composable("dashboard") { DashboardScreen() }
+        composable("recipe") { RecipeScreen() }
+        composable("training") { TrainingScreen(navController = navController) }
+        composable("report") { ReportScreen() }
+        composable("profile") { ProfileScreen(navController = navController) }
+        composable("profile_data") { ProfileDataScreen(navController = navController) }
         composable("trainingDetail/{trainingName}") { backStackEntry ->
             TrainingDetailScreen(
                 navController = navController,

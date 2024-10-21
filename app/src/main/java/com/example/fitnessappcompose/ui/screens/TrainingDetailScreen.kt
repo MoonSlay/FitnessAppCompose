@@ -27,7 +27,6 @@ fun TrainingDetailScreen(navController: NavController, trainingName: String) {
             Exercise("Exercise 2", "Description for Exercise 2", R.drawable.breakfast_tofu_scramble),
             Exercise("Exercise 3", "Description for Exercise 3", R.drawable.breakfast_protein_smoothie)
         ),
-        instructions = "Detailed instructions for $trainingName",
         duration = "45 minutes"
     )
 
@@ -56,7 +55,6 @@ fun TrainingDetailScreen(navController: NavController, trainingName: String) {
         }
         Spacer(modifier = Modifier.height(16.dp))
         Text(text = "Instructions", style = MaterialTheme.typography.headlineSmall)
-        Text(text = training.instructions, style = MaterialTheme.typography.bodyMedium)
         Spacer(modifier = Modifier.height(16.dp))
         Text(text = "Duration", style = MaterialTheme.typography.headlineSmall)
         Text(text = training.duration, style = MaterialTheme.typography.bodyMedium)
