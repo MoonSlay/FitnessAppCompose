@@ -1,6 +1,7 @@
 package com.example.fitnessappcompose.ui.screens
 
 import androidx.compose.foundation.Image
+import androidx.compose.foundation.border
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.lazy.LazyColumn
@@ -23,6 +24,8 @@ import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.runtime.saveable.rememberSaveable
 import androidx.compose.runtime.saveable.Saver
 import androidx.compose.runtime.saveable.listSaver
+import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.text.style.TextAlign
 
 data class Exercise(
     val name: String?,
@@ -56,7 +59,7 @@ val defaultTraining = Training(
 @Composable
 fun TrainingScreen(navController: NavController) {
     val exercises = getExercises()
-    val sections = getSections(exercises)
+    val sections = getSections()
     val bottomSheetScaffoldState = rememberBottomSheetScaffoldState()
     val coroutineScope = rememberCoroutineScope()
     var selectedTraining by rememberSaveable(stateSaver = TrainingSaver) { mutableStateOf(defaultTraining) }
@@ -114,6 +117,8 @@ fun ExerciseList(sections: List<Triple<String, String, List<Training>>>) {
     }
 }
 
+
+@OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun BottomSheetContent(training: Training, navController: NavController) {
     val configuration = LocalConfiguration.current
@@ -127,9 +132,9 @@ fun BottomSheetContent(training: Training, navController: NavController) {
         horizontalAlignment = Alignment.CenterHorizontally
     ) {
         item {
-            Text(text = training.name ?: "", style = MaterialTheme.typography.headlineSmall)
+            Text(text = training.name ?: "", style = MaterialTheme.typography.headlineSmall, textAlign = TextAlign.Center)
             Spacer(modifier = Modifier.height(8.dp))
-            Text(text = training.description ?: "", style = MaterialTheme.typography.bodyMedium)
+            Text(text = training.description ?: "", style = MaterialTheme.typography.bodyMedium, textAlign = TextAlign.Center)
             Spacer(modifier = Modifier.height(16.dp))
             training.imageResId?.let {
                 Image(
@@ -141,14 +146,61 @@ fun BottomSheetContent(training: Training, navController: NavController) {
                 )
             }
             Spacer(modifier = Modifier.height(16.dp))
-            Text(text = "Exercises", style = MaterialTheme.typography.headlineSmall)
+            Text(text = "Exercises", style = MaterialTheme.typography.headlineSmall, textAlign = TextAlign.Center)
+            Spacer(modifier = Modifier.height(8.dp))
+            Row(
+                modifier = Modifier.fillMaxWidth(),
+                horizontalArrangement = Arrangement.SpaceBetween
+            ) {
+                Box(
+                    modifier = Modifier
+                        .weight(1f)
+                        .padding(8.dp),
+                    contentAlignment = Alignment.Center
+                ) {
+                    Text(text = "Exercise", style = MaterialTheme.typography.bodyMedium, textAlign = TextAlign.Center)
+                }
+                Box(
+                    modifier = Modifier
+                        .weight(1f)
+                        .padding(8.dp),
+                    contentAlignment = Alignment.Center
+                ) {
+                    Text(text = "Times", style = MaterialTheme.typography.bodyMedium, textAlign = TextAlign.Center)
+                }
+            }
+            Spacer(modifier = Modifier.height(8.dp))
             training.exercises?.forEach { exercise ->
-                Text(text = exercise.name ?: "", style = MaterialTheme.typography.bodyMedium)
-                Text(text = exercise.description ?: "", style = MaterialTheme.typography.bodySmall)
+                Row(
+                    modifier = Modifier.fillMaxWidth(),
+                    horizontalArrangement = Arrangement.SpaceBetween
+                ) {
+                    Box(
+                        modifier = Modifier
+                            .weight(1f)
+                            .padding(8.dp),
+                        contentAlignment = Alignment.Center
+                    ) {
+                        Text(text = exercise.name ?: "", style = MaterialTheme.typography.bodyMedium, textAlign = TextAlign.Center)
+                    }
+                    Box(
+                        modifier = Modifier
+                            .weight(1f)
+                            .padding(8.dp),
+                        contentAlignment = Alignment.Center
+                    ) {
+                        val timesText = when {
+                            exercise.sets != null && exercise.repetitions != null -> "Sets: ${exercise.sets}, Reps: ${exercise.repetitions}"
+                            exercise.duration != null -> "Duration: ${exercise.duration}"
+                            else -> ""
+                        }
+                        Text(text = timesText, style = MaterialTheme.typography.bodySmall, textAlign = TextAlign.Center)
+                    }
+                }
             }
             Spacer(modifier = Modifier.height(16.dp))
-            Text(text = "Duration", style = MaterialTheme.typography.headlineSmall)
-            Text(text = training.duration ?: "", style = MaterialTheme.typography.bodyMedium)
+            Text(text = "Duration", style = MaterialTheme.typography.headlineSmall, textAlign = TextAlign.Center)
+            Text(text = training.duration ?: "", style = MaterialTheme.typography.bodyMedium, textAlign = TextAlign.Center)
             Spacer(modifier = Modifier.height(16.dp))
             Button(onClick = { navController.navigate("trainingDetail/${training.name}") }) {
                 Text("Go to Training Detail")
@@ -267,43 +319,25 @@ val TrainingSaver: Saver<Training, Any> = listSaver(
 
 fun getExercises(): List<Exercise> {
     return listOf(
-        Exercise("Sun Salutation", "A series of poses to warm up the body.", R.drawable.breakfast_steak_eggs, sets = 3, repetitions = 10),
-        Exercise("Downward Dog", "A foundational yoga pose.", R.drawable.breakfast_protein_smoothie, duration = "2 minutes"),
-        Exercise("Child's Pose", "A resting pose.", R.drawable.breakfast_quinoa_stuffed_peppers, duration = "1 minute"),
-        Exercise("Jumping Jacks", "A full-body exercise.", R.drawable.breakfast_tofu_scramble, sets = 4, repetitions = 15),
-        Exercise("Burpees", "A high-intensity full-body exercise.", R.drawable.breakfast_buckwheat_pancakes, sets = 3, repetitions = 12),
-        Exercise("High Knees", "A cardio exercise.", R.drawable.breakfast_chickpea_salad_sandwich, duration = "3 minutes"),
-        Exercise("Push-ups", "An upper body strength exercise.", R.drawable.breakfast_quinoa_stuffed_peppers, sets = 3, repetitions = 10),
-        Exercise("Squats", "A lower body strength exercise.", R.drawable.breakfast_buckwheat_pancakes, sets = 4, repetitions = 15),
-        Exercise("Lunges", "A lower body exercise.", R.drawable.breakfast_buckwheat_pancakes, sets = 3, repetitions = 12)
+        Exercise("Planks", "A core workout good for.", R.drawable.breakfast_buckwheat_pancakes),
     )
 }
 
-fun getSections(exercises: List<Exercise>): List<Triple<String, String, List<Training>>> {
+fun getSections(): List<Triple<String, String, List<Training>>> {
     return listOf(
+        // Morning Workouts
         Triple("Morning Workouts", "Start your day with these energizing workouts", listOf(
             Training(
                 R.drawable.ic_recipe,
-                "Morning Yoga",
-                "A relaxing yoga session to start your day.",
-                exercises = exercises.subList(0, 3),
-                duration = "30 minutes"
-            ),
-            Training(
-                R.drawable.ic_recipe,
-                "Cardio Blast",
-                "High-intensity cardio workout.",
-                exercises = exercises.subList(3, 6),
+                "Morning Cardio Blast",
+                "A quick cardio workout to boost your energy for the day.",
+                exercises = listOf(
+                    Exercise("Jumping Jacks", "A full-body cardio exercise to get your heart rate up.", R.drawable.breakfast_quinoa_stuffed_peppers, sets = 3, repetitions = 20),
+                    Exercise("High Knees", "A cardio exercise to increase endurance and leg strength.", R.drawable.breakfast_protein_smoothie, sets = 3, repetitions = 15),
+                    Exercise("Mountain Climbers", "Engage the core while getting a cardio boost.", R.drawable.breakfast_chickpea_salad_sandwich, sets = 3, repetitions = 12)
+                ),
                 duration = "20 minutes"
-            ),
-            Training(
-                R.drawable.ic_recipe,
-                "Strength Training",
-                "Build muscle with this strength training routine.",
-                exercises = exercises.subList(6, 9),
-                duration = "40 minutes"
             )
-        ))
-        // Add more sections here
+        )),
     )
 }
