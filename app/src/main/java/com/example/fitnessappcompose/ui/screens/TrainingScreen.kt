@@ -68,7 +68,7 @@ fun TrainingScreen(navController: NavController) {
         },
         sheetPeekHeight = 0.dp
     ) {
-        TrainingList(sections, selectedTraining, bottomSheetScaffoldState, coroutineScope)
+        TrainingList(sections, selectedTraining, { selectedTraining = it }, bottomSheetScaffoldState, coroutineScope)
     }
 }
 
@@ -77,6 +77,7 @@ fun TrainingScreen(navController: NavController) {
 fun TrainingList(
     sections: List<Triple<String, String, List<Training>>>,
     selectedTraining: Training,
+    onTrainingSelected: (Training) -> Unit,
     bottomSheetScaffoldState: BottomSheetScaffoldState,
     coroutineScope: CoroutineScope
 ) {
@@ -88,6 +89,7 @@ fun TrainingList(
         sections.forEach { (title, description, trainings) ->
             item {
                 Section(title, description, trainings) { training ->
+                    onTrainingSelected(training)
                     coroutineScope.launch {
                         bottomSheetScaffoldState.bottomSheetState.expand()
                     }
@@ -200,13 +202,10 @@ fun TrainingCard(training: Training, onTrainingClick: (Training) -> Unit) {
                     Text(text = training.description ?: "", style = MaterialTheme.typography.bodySmall)
                 }
             }
-            Spacer(modifier = Modifier.height(16.dp))
-            training.exercises?.forEach { exercise ->
-                ExerciseCard(exercise)
-            }
         }
     }
 }
+
 
 @Composable
 fun ExerciseCard(exercise: Exercise) {
