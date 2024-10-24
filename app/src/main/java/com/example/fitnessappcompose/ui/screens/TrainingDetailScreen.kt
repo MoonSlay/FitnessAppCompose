@@ -36,27 +36,29 @@ fun TrainingDetailScreen(navController: NavController, trainingName: String) {
             .padding(16.dp),
         horizontalAlignment = Alignment.CenterHorizontally
     ) {
-        Text(text = training.name, style = MaterialTheme.typography.headlineLarge)
+        Text(text = training.name ?: "No name", style = MaterialTheme.typography.headlineLarge)
         Spacer(modifier = Modifier.height(8.dp))
-        Text(text = training.description, style = MaterialTheme.typography.bodyMedium)
+        Text(text = training.description ?: "No description", style = MaterialTheme.typography.bodyMedium)
         Spacer(modifier = Modifier.height(16.dp))
-        Image(
-            painter = painterResource(id = training.imageResId),
-            contentDescription = "Training image",
-            modifier = Modifier
-                .size(200.dp)
-                .clip(CircleShape)
-        )
+        training.imageResId?.let {
+            Image(
+                painter = painterResource(id = it),
+                contentDescription = "Training image",
+                modifier = Modifier
+                    .size(200.dp)
+                    .clip(CircleShape)
+            )
+        }
         Spacer(modifier = Modifier.height(16.dp))
         Text(text = "Exercises", style = MaterialTheme.typography.headlineSmall)
-        training.exercises.forEach { exercise ->
-            Text(text = exercise.name, style = MaterialTheme.typography.bodyMedium)
-            Text(text = exercise.description, style = MaterialTheme.typography.bodySmall)
+        training.exercises?.forEach { exercise ->
+            Text(text = exercise.name ?: "No name", style = MaterialTheme.typography.bodyMedium)
+            Text(text = exercise.description ?: "No description", style = MaterialTheme.typography.bodySmall)
         }
         Spacer(modifier = Modifier.height(16.dp))
         Text(text = "Instructions", style = MaterialTheme.typography.headlineSmall)
         Spacer(modifier = Modifier.height(16.dp))
         Text(text = "Duration", style = MaterialTheme.typography.headlineSmall)
-        Text(text = training.duration, style = MaterialTheme.typography.bodyMedium)
+        Text(text = training.duration ?: "No duration", style = MaterialTheme.typography.bodyMedium)
     }
 }

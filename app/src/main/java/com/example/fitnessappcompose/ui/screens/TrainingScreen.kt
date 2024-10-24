@@ -25,20 +25,20 @@ import androidx.compose.runtime.saveable.Saver
 import androidx.compose.runtime.saveable.listSaver
 
 data class Exercise(
-    val name: String,
-    val description: String,
-    val imageResId: Int,
+    val name: String?,
+    val description: String?,
+    val imageResId: Int?,
     val sets: Int? = null,
     val repetitions: Int? = null,
     val duration: String? = null
 )
 
 data class Training(
-    val imageResId: Int,
-    val name: String,
-    val description: String,
-    val exercises: List<Exercise>,
-    val duration: String
+    val imageResId: Int?,
+    val name: String?,
+    val description: String?,
+    val exercises: List<Exercise>?,
+    val duration: String?
 )
 
 val defaultTraining = Training(
@@ -106,13 +106,11 @@ fun TrainingList(
 @Composable
 fun ExerciseList(sections: List<Triple<String, String, List<Training>>>) {
     Column {
-        sections.flatMap { it.third }.flatMap { it.exercises }.distinct().forEach { exercise ->
+        sections.flatMap { it.third }.flatMap { it.exercises ?: emptyList() }.distinct().forEach { exercise ->
             ExerciseCard(exercise)
         }
     }
 }
-
-
 
 @Composable
 fun BottomSheetContent(training: Training, navController: NavController) {
@@ -127,26 +125,28 @@ fun BottomSheetContent(training: Training, navController: NavController) {
         horizontalAlignment = Alignment.CenterHorizontally
     ) {
         item {
-            Text(text = training.name, style = MaterialTheme.typography.headlineSmall)
+            Text(text = training.name ?: "", style = MaterialTheme.typography.headlineSmall)
             Spacer(modifier = Modifier.height(8.dp))
-            Text(text = training.description, style = MaterialTheme.typography.bodyMedium)
+            Text(text = training.description ?: "", style = MaterialTheme.typography.bodyMedium)
             Spacer(modifier = Modifier.height(16.dp))
-            Image(
-                painter = painterResource(id = training.imageResId),
-                contentDescription = "Training image",
-                modifier = Modifier
-                    .size(200.dp)
-                    .clip(CircleShape)
-            )
+            training.imageResId?.let {
+                Image(
+                    painter = painterResource(id = it),
+                    contentDescription = "Training image",
+                    modifier = Modifier
+                        .size(200.dp)
+                        .clip(CircleShape)
+                )
+            }
             Spacer(modifier = Modifier.height(16.dp))
             Text(text = "Exercises", style = MaterialTheme.typography.headlineSmall)
-            training.exercises.forEach { exercise ->
-                Text(text = exercise.name, style = MaterialTheme.typography.bodyMedium)
-                Text(text = exercise.description, style = MaterialTheme.typography.bodySmall)
+            training.exercises?.forEach { exercise ->
+                Text(text = exercise.name ?: "", style = MaterialTheme.typography.bodyMedium)
+                Text(text = exercise.description ?: "", style = MaterialTheme.typography.bodySmall)
             }
             Spacer(modifier = Modifier.height(16.dp))
             Text(text = "Duration", style = MaterialTheme.typography.headlineSmall)
-            Text(text = training.duration, style = MaterialTheme.typography.bodyMedium)
+            Text(text = training.duration ?: "", style = MaterialTheme.typography.bodyMedium)
             Spacer(modifier = Modifier.height(16.dp))
             Button(onClick = { navController.navigate("trainingDetail/${training.name}") }) {
                 Text("Go to Training Detail")
@@ -168,6 +168,7 @@ fun Section(title: String, description: String, trainings: List<Training>, onTra
         Spacer(modifier = Modifier.height(16.dp))
     }
 }
+
 @Composable
 fun TrainingCard(training: Training, onTrainingClick: (Training) -> Unit) {
     ElevatedCard(
@@ -184,21 +185,23 @@ fun TrainingCard(training: Training, onTrainingClick: (Training) -> Unit) {
                 verticalAlignment = Alignment.CenterVertically,
                 horizontalArrangement = Arrangement.Center
             ) {
-                Image(
-                    painter = painterResource(id = training.imageResId),
-                    contentDescription = "Training image",
-                    modifier = Modifier
-                        .size(64.dp)
-                        .clip(CircleShape)
-                )
+                training.imageResId?.let {
+                    Image(
+                        painter = painterResource(id = it),
+                        contentDescription = "Training image",
+                        modifier = Modifier
+                            .size(64.dp)
+                            .clip(CircleShape)
+                    )
+                }
                 Spacer(modifier = Modifier.width(16.dp))
                 Column {
-                    Text(text = training.name, style = MaterialTheme.typography.bodyMedium)
-                    Text(text = training.description, style = MaterialTheme.typography.bodySmall)
+                    Text(text = training.name ?: "", style = MaterialTheme.typography.bodyMedium)
+                    Text(text = training.description ?: "", style = MaterialTheme.typography.bodySmall)
                 }
             }
             Spacer(modifier = Modifier.height(16.dp))
-            training.exercises.forEach { exercise ->
+            training.exercises?.forEach { exercise ->
                 ExerciseCard(exercise)
             }
         }
@@ -218,15 +221,17 @@ fun ExerciseCard(exercise: Exercise) {
             verticalAlignment = Alignment.CenterVertically,
             modifier = Modifier.padding(8.dp)
         ) {
-            Image(
-                painter = painterResource(id = exercise.imageResId),
-                contentDescription = exercise.name,
-                modifier = Modifier.size(64.dp)
-            )
+            exercise.imageResId?.let {
+                Image(
+                    painter = painterResource(id = it),
+                    contentDescription = exercise.name,
+                    modifier = Modifier.size(64.dp)
+                )
+            }
             Spacer(modifier = Modifier.width(16.dp))
             Column {
-                Text(text = exercise.name, style = MaterialTheme.typography.bodyMedium)
-                Text(text = exercise.description, style = MaterialTheme.typography.bodySmall)
+                Text(text = exercise.name ?: "", style = MaterialTheme.typography.bodyMedium)
+                Text(text = exercise.description ?: "", style = MaterialTheme.typography.bodySmall)
                 exercise.sets?.let { sets ->
                     exercise.repetitions?.let { repetitions ->
                         Text(text = "Sets: $sets, Repetitions: $repetitions", style = MaterialTheme.typography.bodySmall)
@@ -246,17 +251,17 @@ val TrainingSaver: Saver<Training, Any> = listSaver(
             training.imageResId,
             training.name,
             training.description,
-            training.exercises.map { listOf(it.name, it.description, it.imageResId) }, // Save exercises as a list of lists
+            training.exercises?.map { listOf(it.name, it.description, it.imageResId) }, // Save exercises as a list of lists
             training.duration
         )
     },
     restore = { list ->
         Training(
-            imageResId = list[0] as Int,
-            name = list[1] as String,
-            description = list[2] as String,
-            exercises = (list[3] as List<List<Any>>).map { Exercise(it[0] as String, it[1] as String, it[2] as Int) }, // Restore exercises from a list of lists
-            duration = list[4] as String
+            imageResId = list[0] as Int?,
+            name = list[1] as String?,
+            description = list[2] as String?,
+            exercises = (list[3] as List<List<Any>>?)?.map { Exercise(it[0] as String?, it[1] as String?, it[2] as Int?) }, // Restore exercises from a list of lists
+            duration = list[4] as String?
         )
     }
 )
