@@ -33,7 +33,6 @@ data class Exercise(
     val sets: Int? = null,
     val repetitions: Int? = null,
     val duration: String? = null,
-    val restTime: String? = null // Add rest time field
 )
 
 data class Training(

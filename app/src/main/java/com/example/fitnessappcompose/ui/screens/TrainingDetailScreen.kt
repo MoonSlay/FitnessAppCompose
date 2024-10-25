@@ -40,9 +40,7 @@ fun TrainingDetailScreen(navController: NavController, sharedViewModel: SharedVi
                     exercise.sets?.let { sets ->
                         items(sets) { setIndex ->
                             ExerciseSetCard(exercise, setIndex + 1)
-                            exercise.restTime?.let { restTime ->
-                                RestTimeCard(restTime)
-                            }
+                            RestTimeCard("15 seconds")
                         }
                     }
                 }
