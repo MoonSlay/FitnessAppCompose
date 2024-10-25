@@ -38,9 +38,12 @@ fun TrainingDetailScreen(navController: NavController, sharedViewModel: SharedVi
             LazyColumn {
                 it.exercises?.forEach { exercise ->
                     exercise.sets?.let { sets ->
-                        items(sets) { setIndex ->
-                            ExerciseSetCard(exercise, setIndex + 1)
-                            RestTimeCard("15 seconds")
+                        items(sets * 2) { index ->
+                            if (index % 2 == 0) {
+                                ExerciseSetCard(exercise, (index / 2) + 1)
+                            } else {
+                                RestTimeCard("15 seconds")
+                            }
                         }
                     }
                 }
@@ -51,7 +54,6 @@ fun TrainingDetailScreen(navController: NavController, sharedViewModel: SharedVi
         }
     }
 }
-
 @Composable
 fun ExerciseSetCard(exercise: Exercise, setNumber: Int) {
     ElevatedCard(
