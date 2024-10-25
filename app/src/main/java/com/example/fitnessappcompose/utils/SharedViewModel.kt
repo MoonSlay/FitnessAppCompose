@@ -29,8 +29,20 @@ class SharedViewModel(application: Application) : AndroidViewModel(application) 
     private val _monthlyCaloriesBurned = MutableLiveData<Int>(sharedPreferences.getInt("monthly_calories_burned", 0))
     val monthlyCaloriesBurned: LiveData<Int> get() = _monthlyCaloriesBurned
 
+    private val _stepCount = MutableLiveData<Int>(sharedPreferences.getInt("step_count", 0))
+    val stepCount: LiveData<Int> get() = _stepCount
+
+    private val _dailyStepCount = MutableLiveData<Int>(sharedPreferences.getInt("daily_step_count", 0))
+    val dailyStepCount: LiveData<Int> get() = _dailyStepCount
+
+    private val _weeklyStepCount = MutableLiveData<Int>(sharedPreferences.getInt("weekly_step_count", 0))
+    val weeklyStepCount: LiveData<Int> get() = _weeklyStepCount
+
+    private val _monthlyStepCount = MutableLiveData<Int>(sharedPreferences.getInt("monthly_step_count", 0))
+    val monthlyStepCount: LiveData<Int> get() = _monthlyStepCount
+
     init {
-        resetCaloriesIfNeeded()
+        resetCountsIfNeeded()
     }
 
     fun setCaloriesBurned(calories: Int) {
@@ -53,7 +65,23 @@ class SharedViewModel(application: Application) : AndroidViewModel(application) 
         sharedPreferences.edit().putInt("monthly_calories_burned", newMonthlyTotal).apply()
     }
 
-    private fun resetCaloriesIfNeeded() {
+    fun setStepCount(steps: Int) {
+        _stepCount.value = steps
+
+        val newDailyTotal = (_dailyStepCount.value ?: 0) + steps
+        _dailyStepCount.value = newDailyTotal
+        sharedPreferences.edit().putInt("daily_step_count", newDailyTotal).apply()
+
+        val newWeeklyTotal = (_weeklyStepCount.value ?: 0) + steps
+        _weeklyStepCount.value = newWeeklyTotal
+        sharedPreferences.edit().putInt("weekly_step_count", newWeeklyTotal).apply()
+
+        val newMonthlyTotal = (_monthlyStepCount.value ?: 0) + steps
+        _monthlyStepCount.value = newMonthlyTotal
+        sharedPreferences.edit().putInt("monthly_step_count", newMonthlyTotal).apply()
+    }
+
+    private fun resetCountsIfNeeded() {
         val currentDate = Calendar.getInstance()
         val lastResetDate = Calendar.getInstance().apply {
             timeInMillis = sharedPreferences.getLong("last_reset_date", 0)
@@ -61,17 +89,23 @@ class SharedViewModel(application: Application) : AndroidViewModel(application) 
 
         if (currentDate.get(Calendar.DAY_OF_YEAR) != lastResetDate.get(Calendar.DAY_OF_YEAR)) {
             _dailyCaloriesBurned.value = 0
+            _dailyStepCount.value = 0
             sharedPreferences.edit().putInt("daily_calories_burned", 0).apply()
+            sharedPreferences.edit().putInt("daily_step_count", 0).apply()
         }
 
         if (currentDate.get(Calendar.WEEK_OF_YEAR) != lastResetDate.get(Calendar.WEEK_OF_YEAR)) {
             _weeklyCaloriesBurned.value = 0
+            _weeklyStepCount.value = 0
             sharedPreferences.edit().putInt("weekly_calories_burned", 0).apply()
+            sharedPreferences.edit().putInt("weekly_step_count", 0).apply()
         }
 
         if (currentDate.get(Calendar.MONTH) != lastResetDate.get(Calendar.MONTH)) {
             _monthlyCaloriesBurned.value = 0
+            _monthlyStepCount.value = 0
             sharedPreferences.edit().putInt("monthly_calories_burned", 0).apply()
+            sharedPreferences.edit().putInt("monthly_step_count", 0).apply()
         }
 
         sharedPreferences.edit().putLong("last_reset_date", currentDate.timeInMillis).apply()

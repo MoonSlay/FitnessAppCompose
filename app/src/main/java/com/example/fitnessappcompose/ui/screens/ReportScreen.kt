@@ -20,6 +20,11 @@ fun ReportScreen(sharedViewModel: SharedViewModel = viewModel()) {
     val weeklyCaloriesBurned by sharedViewModel.weeklyCaloriesBurned.observeAsState(0)
     val monthlyCaloriesBurned by sharedViewModel.monthlyCaloriesBurned.observeAsState(0)
 
+    val stepCount by sharedViewModel.stepCount.observeAsState(0)
+    val dailyStepCount by sharedViewModel.dailyStepCount.observeAsState(0)
+    val weeklyStepCount by sharedViewModel.weeklyStepCount.observeAsState(0)
+    val monthlyStepCount by sharedViewModel.monthlyStepCount.observeAsState(0)
+
     Column(
         modifier = Modifier
             .fillMaxSize()
@@ -38,5 +43,13 @@ fun ReportScreen(sharedViewModel: SharedViewModel = viewModel()) {
         Text(text = "Weekly Calories Burned: $weeklyCaloriesBurned", style = MaterialTheme.typography.bodyMedium)
         Spacer(modifier = Modifier.height(16.dp))
         Text(text = "Monthly Calories Burned: $monthlyCaloriesBurned", style = MaterialTheme.typography.bodyMedium)
+        Spacer(modifier = Modifier.height(16.dp))
+        Text(text = "Steps Taken in Last Session: $stepCount", style = MaterialTheme.typography.bodyMedium)
+        Spacer(modifier = Modifier.height(16.dp))
+        Text(text = "Daily Steps Taken: $dailyStepCount", style = MaterialTheme.typography.bodyMedium)
+        Spacer(modifier = Modifier.height(16.dp))
+        Text(text = "Weekly Steps Taken: $weeklyStepCount", style = MaterialTheme.typography.bodyMedium)
+        Spacer(modifier = Modifier.height(16.dp))
+        Text(text = "Monthly Steps Taken: $monthlyStepCount", style = MaterialTheme.typography.bodyMedium)
     }
 }
