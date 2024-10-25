@@ -24,8 +24,6 @@ data class ExerciseSetState(
     var restTime: Int = 15
 )
 
-
-
 @Composable
 fun TrainingSessionScreen(navController: NavController, sharedViewModel: SharedViewModel = viewModel()) {
     val training = sharedViewModel.selectedTraining.observeAsState()

@@ -13,8 +13,12 @@ class SharedViewModel : ViewModel() {
     private val _caloriesBurned = MutableLiveData<Int>()
     val caloriesBurned: LiveData<Int> get() = _caloriesBurned
 
+    private val _totalCaloriesBurned = MutableLiveData<Int>(0)
+    val totalCaloriesBurned: LiveData<Int> get() = _totalCaloriesBurned
+
     fun setCaloriesBurned(calories: Int) {
         _caloriesBurned.value = calories
+        _totalCaloriesBurned.value = (_totalCaloriesBurned.value ?: 0) + calories
     }
 
     fun selectTraining(training: Training) {

@@ -15,6 +15,7 @@ import com.example.fitnessappcompose.utils.SharedViewModel
 @Composable
 fun ReportScreen(sharedViewModel: SharedViewModel = viewModel()) {
     val caloriesBurned by sharedViewModel.caloriesBurned.observeAsState(0)
+    val totalCaloriesBurned by sharedViewModel.totalCaloriesBurned.observeAsState(0)
 
     Column(
         modifier = Modifier
@@ -25,6 +26,8 @@ fun ReportScreen(sharedViewModel: SharedViewModel = viewModel()) {
     ) {
         Text(text = "Report Screen", style = MaterialTheme.typography.headlineSmall)
         Spacer(modifier = Modifier.height(16.dp))
-        Text(text = "Calories Burned: $caloriesBurned", style = MaterialTheme.typography.bodyMedium)
+        Text(text = "Calories Burned in Last Session: $caloriesBurned", style = MaterialTheme.typography.bodyMedium)
+        Spacer(modifier = Modifier.height(16.dp))
+        Text(text = "Total Calories Burned: $totalCaloriesBurned", style = MaterialTheme.typography.bodyMedium)
     }
 }
