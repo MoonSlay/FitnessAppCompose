@@ -16,6 +16,9 @@ import com.example.fitnessappcompose.utils.SharedViewModel
 fun ReportScreen(sharedViewModel: SharedViewModel = viewModel()) {
     val caloriesBurned by sharedViewModel.caloriesBurned.observeAsState(0)
     val totalCaloriesBurned by sharedViewModel.totalCaloriesBurned.observeAsState(0)
+    val dailyCaloriesBurned by sharedViewModel.dailyCaloriesBurned.observeAsState(0)
+    val weeklyCaloriesBurned by sharedViewModel.weeklyCaloriesBurned.observeAsState(0)
+    val monthlyCaloriesBurned by sharedViewModel.monthlyCaloriesBurned.observeAsState(0)
 
     Column(
         modifier = Modifier
@@ -29,5 +32,11 @@ fun ReportScreen(sharedViewModel: SharedViewModel = viewModel()) {
         Text(text = "Calories Burned in Last Session: $caloriesBurned", style = MaterialTheme.typography.bodyMedium)
         Spacer(modifier = Modifier.height(16.dp))
         Text(text = "Total Calories Burned: $totalCaloriesBurned", style = MaterialTheme.typography.bodyMedium)
+        Spacer(modifier = Modifier.height(16.dp))
+        Text(text = "Daily Calories Burned: $dailyCaloriesBurned", style = MaterialTheme.typography.bodyMedium)
+        Spacer(modifier = Modifier.height(16.dp))
+        Text(text = "Weekly Calories Burned: $weeklyCaloriesBurned", style = MaterialTheme.typography.bodyMedium)
+        Spacer(modifier = Modifier.height(16.dp))
+        Text(text = "Monthly Calories Burned: $monthlyCaloriesBurned", style = MaterialTheme.typography.bodyMedium)
     }
 }
