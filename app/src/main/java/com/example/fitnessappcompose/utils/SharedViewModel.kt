@@ -1,9 +1,10 @@
 // SharedViewModel.kt
-package com.example.fitnessappcompose.ui.screens
+package com.example.fitnessappcompose.utils
 
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
+import com.example.fitnessappcompose.ui.screens.Training
 
 class SharedViewModel : ViewModel() {
     private val _selectedTraining = MutableLiveData<Training>()

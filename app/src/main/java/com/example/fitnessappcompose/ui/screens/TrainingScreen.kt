@@ -1,7 +1,6 @@
 package com.example.fitnessappcompose.ui.screens
 
 import androidx.compose.foundation.Image
-import androidx.compose.foundation.border
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.lazy.LazyColumn
@@ -24,8 +23,8 @@ import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.runtime.saveable.rememberSaveable
 import androidx.compose.runtime.saveable.Saver
 import androidx.compose.runtime.saveable.listSaver
-import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.text.style.TextAlign
+import com.example.fitnessappcompose.utils.SharedViewModel
 
 data class Exercise(
     val name: String?,
@@ -33,7 +32,8 @@ data class Exercise(
     val imageResId: Int?,
     val sets: Int? = null,
     val repetitions: Int? = null,
-    val duration: String? = null
+    val duration: String? = null,
+    val restTime: String? = null // Add rest time field
 )
 
 data class Training(

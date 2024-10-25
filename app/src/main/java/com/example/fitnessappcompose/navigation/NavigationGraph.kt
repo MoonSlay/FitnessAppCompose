@@ -10,6 +10,7 @@ import com.example.fitnessappcompose.ui.screens.*
 import com.example.fitnessappcompose.ui.screens.auth.LoginScreen
 import com.example.fitnessappcompose.ui.screens.auth.RegisterScreen
 import androidx.lifecycle.viewmodel.compose.viewModel
+import com.example.fitnessappcompose.utils.SharedViewModel
 
 @Composable
 fun NavigationGraph(navController: NavHostController, modifier: Modifier = Modifier) {
