@@ -22,11 +22,16 @@ fun NavigationGraph(navController: NavHostController, modifier: Modifier = Modif
         composable("dashboard") { DashboardScreen() }
         composable("recipe") { RecipeScreen() }
         composable("training") { TrainingScreen(navController = navController, sharedViewModel = sharedViewModel) }
-        composable("report") { ReportScreen() }
+        composable("report_screen") {
+            ReportScreen(sharedViewModel = sharedViewModel)
+        }
         composable("profile") { ProfileScreen(navController = navController) }
         composable("profile_data") { ProfileDataScreen(navController = navController) }
         composable("trainingDetail") {
             TrainingDetailScreen(navController = navController, sharedViewModel = sharedViewModel)
+        }
+        composable("trainingSession") {
+            TrainingSessionScreen(navController = navController, sharedViewModel = sharedViewModel)
         }
     }
 }

@@ -6,6 +6,7 @@ import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.items
 import androidx.compose.foundation.shape.CircleShape
+import androidx.compose.material3.Button
 import androidx.compose.material3.CardDefaults
 import androidx.compose.material3.ElevatedCard
 import androidx.compose.material3.MaterialTheme
@@ -47,13 +48,20 @@ fun TrainingDetailScreen(navController: NavController, sharedViewModel: SharedVi
                         }
                     }
                 }
+                item {
+                    Spacer(modifier = Modifier.height(16.dp))
+                    Text(text = "Duration", style = MaterialTheme.typography.headlineSmall)
+                    Text(text = it.duration ?: "No duration", style = MaterialTheme.typography.bodyMedium)
+                    Spacer(modifier = Modifier.height(16.dp))
+                    Button(onClick = { navController.navigate("trainingSession") }) {
+                        Text(text = "Start Training")
+                    }
+                }
             }
-            Spacer(modifier = Modifier.height(16.dp))
-            Text(text = "Duration", style = MaterialTheme.typography.headlineSmall)
-            Text(text = it.duration ?: "No duration", style = MaterialTheme.typography.bodyMedium)
         }
     }
 }
+
 @Composable
 fun ExerciseSetCard(exercise: Exercise, setNumber: Int) {
     ElevatedCard(

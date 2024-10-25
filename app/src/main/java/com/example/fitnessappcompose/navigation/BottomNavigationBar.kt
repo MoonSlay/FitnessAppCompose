@@ -16,7 +16,7 @@ fun BottomNavigationBar(navController: NavController) {
             NavigationItem("Dashboard", Icons.Filled.Home),
             NavigationItem("Recipe", ImageVector.vectorResource(id = R.drawable.ic_recipe)),
             NavigationItem("Training", ImageVector.vectorResource(id = R.drawable.ic_fitness_center)),
-            NavigationItem("Report", ImageVector.vectorResource(id = R.drawable.ic_report)),
+            NavigationItem("report_screen", ImageVector.vectorResource(id = R.drawable.ic_report)),
             NavigationItem("Profile", Icons.Filled.Person),
         )
         items.forEach { item ->
