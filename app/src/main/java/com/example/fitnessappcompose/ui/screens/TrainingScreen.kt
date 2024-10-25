@@ -57,7 +57,7 @@ val defaultTraining = Training(
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
-fun TrainingScreen(navController: NavController) {
+fun TrainingScreen(navController: NavController, sharedViewModel: SharedViewModel) {
     val exercises = getExercises()
     val sections = getSections()
     val bottomSheetScaffoldState = rememberBottomSheetScaffoldState()
@@ -67,7 +67,7 @@ fun TrainingScreen(navController: NavController) {
     BottomSheetScaffold(
         scaffoldState = bottomSheetScaffoldState,
         sheetContent = {
-            BottomSheetContent(selectedTraining, navController)
+            BottomSheetContent(selectedTraining, navController, sharedViewModel)
         },
         sheetPeekHeight = 0.dp
     ) {
@@ -120,7 +120,7 @@ fun ExerciseList(sections: List<Triple<String, String, List<Training>>>) {
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
-fun BottomSheetContent(training: Training, navController: NavController) {
+fun BottomSheetContent(training: Training, navController: NavController, sharedViewModel: SharedViewModel) {
     val configuration = LocalConfiguration.current
     val screenHeight = configuration.screenHeightDp.dp
 
@@ -202,7 +202,10 @@ fun BottomSheetContent(training: Training, navController: NavController) {
             Text(text = "Duration", style = MaterialTheme.typography.headlineSmall, textAlign = TextAlign.Center)
             Text(text = training.duration ?: "", style = MaterialTheme.typography.bodyMedium, textAlign = TextAlign.Center)
             Spacer(modifier = Modifier.height(16.dp))
-            Button(onClick = { navController.navigate("trainingDetail/${training.name}") }) {
+            Button(onClick = {
+                sharedViewModel.selectTraining(training)
+                navController.navigate("trainingDetail")
+            }) {
                 Text("Go to Training Detail")
             }
         }
