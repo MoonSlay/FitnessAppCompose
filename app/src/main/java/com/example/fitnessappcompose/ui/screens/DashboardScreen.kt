@@ -22,15 +22,26 @@ import com.example.fitnessappcompose.MainActivity
 import com.example.fitnessappcompose.utils.getUsername
 import kotlinx.coroutines.delay
 import android.Manifest
+import androidx.compose.foundation.layout.*
+import androidx.compose.material3.CircularProgressIndicator
+import androidx.compose.material3.MaterialTheme
+import androidx.compose.material3.Surface
+import androidx.compose.material3.Text
+import androidx.compose.runtime.Composable
+import androidx.compose.runtime.livedata.observeAsState
+import androidx.compose.ui.graphics.Color
+import androidx.lifecycle.viewmodel.compose.viewModel
+import com.example.fitnessappcompose.utils.SharedViewModel
+import kotlin.math.min
 
-@Preview
 @Composable
-fun DashboardScreen() {
+fun DashboardScreen(sharedViewModel: SharedViewModel = viewModel()) {
     RequestActivityRecognitionPermission()
     val context = LocalContext.current
     val username = remember { getUsername(context) }
     val mainActivity = context as MainActivity
-    val stepCount by mainActivity.stepCount.collectAsState(initial = 0)
+    val dailyStepCount by mainActivity.stepCount.collectAsState(initial = 0)
+    val dailyCaloriesBurned by sharedViewModel.dailyCaloriesBurned.observeAsState(0)
 
     val quotes = listOf(
         "The only bad workout is the one that didn't happen.",
@@ -65,7 +76,7 @@ fun DashboardScreen() {
         }
 
         item {
-            DailyGoalsCard(stepCount)
+            GoalProgressSurface(stepCount = dailyStepCount, targetSteps = 100, caloriesBurned = dailyCaloriesBurned, targetCalories = 100)
         }
 
         item {
@@ -80,71 +91,60 @@ fun DashboardScreen() {
 }
 
 @Composable
-fun DailyGoalsCard(stepCount: Int) {
-    ElevatedCard(
+fun GoalProgressSurface(stepCount: Int, targetSteps: Int, caloriesBurned: Int, targetCalories: Int) {
+    Surface(
         modifier = Modifier
             .fillMaxWidth()
-            .padding(bottom = 20.dp),
-        elevation = CardDefaults.elevatedCardElevation(defaultElevation = 4.dp)
+            .padding(vertical = 20.dp)
+            .height(150.dp),
+        color = MaterialTheme.colorScheme.surface,
+        shadowElevation = 4.dp
     ) {
-        Column(
-            modifier = Modifier.padding(16.dp),
-            verticalArrangement = Arrangement.Center,
-            horizontalAlignment = Alignment.CenterHorizontally
+        Row(
+            modifier = Modifier.fillMaxSize(),
+            verticalAlignment = Alignment.CenterVertically,
+            horizontalArrangement = Arrangement.SpaceEvenly
         ) {
-            Text(
-                text = "Daily Goals:",
-                fontSize = 20.sp,
-                fontWeight = FontWeight.Medium
+            CircularProgressIndicatorWithText(
+                progress = min(stepCount / targetSteps.toFloat(), 1f),
+                label = "Steps",
+                value = "$stepCount/$targetSteps"
             )
-            Spacer(modifier = Modifier.height(16.dp))
-            Row(
-                horizontalArrangement = Arrangement.SpaceBetween,
-                modifier = Modifier.fillMaxWidth()
-            ) {
-                Column(
-                    horizontalAlignment = Alignment.CenterHorizontally,
-                    modifier = Modifier.weight(0.35f)
-                ) {
-                    GoalCard("$stepCount/100")
-                    Text(
-                        text = "Steps Taken",
-                        fontSize = 10.sp,
-                        fontWeight = FontWeight.Medium
-                    )
-                }
-                Spacer(modifier = Modifier.width(16.dp))
-                Column(
-                    horizontalAlignment = Alignment.CenterHorizontally,
-                    modifier = Modifier.weight(0.35f)
-                ) {
-                    GoalCard("0/100")
-                    Text(
-                        text = "Calories Burned",
-                        fontSize = 10.sp,
-                        fontWeight = FontWeight.Medium
-                    )
-                }
-            }
+            CircularProgressIndicatorWithText(
+                progress = min(caloriesBurned / targetCalories.toFloat(), 1f),
+                label = "Calories",
+                value = "$caloriesBurned/$targetCalories"
+            )
         }
     }
 }
 
 @Composable
-fun GoalCard(text: String, modifier: Modifier = Modifier) {
-    ElevatedCard(
-        modifier = modifier
-            .padding(bottom = 20.dp),
-        elevation = CardDefaults.elevatedCardElevation(defaultElevation = 4.dp)
+fun CircularProgressIndicatorWithText(progress: Float, label: String, value: String) {
+    Box(
+        contentAlignment = Alignment.Center,
+        modifier = Modifier.size(120.dp)
     ) {
-        Box(
-            contentAlignment = Alignment.Center,
-            modifier = Modifier.padding(16.dp)
+        CircularProgressIndicator(
+            progress = progress,
+            color = MaterialTheme.colorScheme.primary,
+            strokeWidth = 8.dp,
+            modifier = Modifier.fillMaxSize()
+        )
+        Column(
+            horizontalAlignment = Alignment.CenterHorizontally,
+            verticalArrangement = Arrangement.Center
         ) {
             Text(
-                text = text,
+                text = value,
                 fontSize = 20.sp,
-                fontWeight = FontWeight.Medium
+                fontWeight = FontWeight.Bold
+            )
+            Text(
+                text = label,
+                fontSize = 12.sp,
+                fontWeight = FontWeight.Medium,
+                color = Color.Gray
             )
         }
     }

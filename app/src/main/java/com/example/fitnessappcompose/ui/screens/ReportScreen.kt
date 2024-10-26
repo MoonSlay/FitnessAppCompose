@@ -15,12 +15,10 @@ import com.example.fitnessappcompose.utils.SharedViewModel
 @Composable
 fun ReportScreen(sharedViewModel: SharedViewModel = viewModel()) {
     val caloriesBurned by sharedViewModel.caloriesBurned.observeAsState(0)
-    val totalCaloriesBurned by sharedViewModel.totalCaloriesBurned.observeAsState(0)
     val dailyCaloriesBurned by sharedViewModel.dailyCaloriesBurned.observeAsState(0)
     val weeklyCaloriesBurned by sharedViewModel.weeklyCaloriesBurned.observeAsState(0)
     val monthlyCaloriesBurned by sharedViewModel.monthlyCaloriesBurned.observeAsState(0)
 
-    val stepCount by sharedViewModel.stepCount.observeAsState(0)
     val dailyStepCount by sharedViewModel.dailyStepCount.observeAsState(0)
     val weeklyStepCount by sharedViewModel.weeklyStepCount.observeAsState(0)
     val monthlyStepCount by sharedViewModel.monthlyStepCount.observeAsState(0)
@@ -36,15 +34,11 @@ fun ReportScreen(sharedViewModel: SharedViewModel = viewModel()) {
         Spacer(modifier = Modifier.height(16.dp))
         Text(text = "Calories Burned in Last Session: $caloriesBurned", style = MaterialTheme.typography.bodyMedium)
         Spacer(modifier = Modifier.height(16.dp))
-        Text(text = "Total Calories Burned: $totalCaloriesBurned", style = MaterialTheme.typography.bodyMedium)
-        Spacer(modifier = Modifier.height(16.dp))
         Text(text = "Daily Calories Burned: $dailyCaloriesBurned", style = MaterialTheme.typography.bodyMedium)
         Spacer(modifier = Modifier.height(16.dp))
         Text(text = "Weekly Calories Burned: $weeklyCaloriesBurned", style = MaterialTheme.typography.bodyMedium)
         Spacer(modifier = Modifier.height(16.dp))
         Text(text = "Monthly Calories Burned: $monthlyCaloriesBurned", style = MaterialTheme.typography.bodyMedium)
-        Spacer(modifier = Modifier.height(16.dp))
-        Text(text = "Steps Taken in Last Session: $stepCount", style = MaterialTheme.typography.bodyMedium)
         Spacer(modifier = Modifier.height(16.dp))
         Text(text = "Daily Steps Taken: $dailyStepCount", style = MaterialTheme.typography.bodyMedium)
         Spacer(modifier = Modifier.height(16.dp))

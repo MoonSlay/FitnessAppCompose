@@ -17,9 +17,6 @@ class SharedViewModel(application: Application) : AndroidViewModel(application) 
     private val _caloriesBurned = MutableLiveData<Int>()
     val caloriesBurned: LiveData<Int> get() = _caloriesBurned
 
-    private val _totalCaloriesBurned = MutableLiveData<Int>(sharedPreferences.getInt("total_calories_burned", 0))
-    val totalCaloriesBurned: LiveData<Int> get() = _totalCaloriesBurned
-
     private val _dailyCaloriesBurned = MutableLiveData<Int>(sharedPreferences.getInt("daily_calories_burned", 0))
     val dailyCaloriesBurned: LiveData<Int> get() = _dailyCaloriesBurned
 
@@ -28,9 +25,6 @@ class SharedViewModel(application: Application) : AndroidViewModel(application) 
 
     private val _monthlyCaloriesBurned = MutableLiveData<Int>(sharedPreferences.getInt("monthly_calories_burned", 0))
     val monthlyCaloriesBurned: LiveData<Int> get() = _monthlyCaloriesBurned
-
-    private val _stepCount = MutableLiveData<Int>(sharedPreferences.getInt("step_count", 0))
-    val stepCount: LiveData<Int> get() = _stepCount
 
     private val _dailyStepCount = MutableLiveData<Int>(sharedPreferences.getInt("daily_step_count", 0))
     val dailyStepCount: LiveData<Int> get() = _dailyStepCount
@@ -48,9 +42,6 @@ class SharedViewModel(application: Application) : AndroidViewModel(application) 
     fun setCaloriesBurned(calories: Int) {
         _caloriesBurned.value = calories
 
-        val newTotal = (_totalCaloriesBurned.value ?: 0) + calories
-        _totalCaloriesBurned.value = newTotal
-        sharedPreferences.edit().putInt("total_calories_burned", newTotal).apply()
 
         val newDailyTotal = (_dailyCaloriesBurned.value ?: 0) + calories
         _dailyCaloriesBurned.value = newDailyTotal
@@ -66,7 +57,6 @@ class SharedViewModel(application: Application) : AndroidViewModel(application) 
     }
 
     fun setStepCount(steps: Int) {
-        _stepCount.value = steps
 
         val newDailyTotal = (_dailyStepCount.value ?: 0) + steps
         _dailyStepCount.value = newDailyTotal

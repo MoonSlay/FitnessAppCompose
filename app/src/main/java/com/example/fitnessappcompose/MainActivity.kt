@@ -109,6 +109,13 @@ class MainActivity : ComponentActivity(), SensorEventListener {
     override fun onSensorChanged(sensorEvent: SensorEvent?) {
         sensorEvent?.let { event ->
             if (event.sensor.type == Sensor.TYPE_STEP_DETECTOR) {
+                _stepCount.update { it + 1 }
+                // Save step count to SharedPreferences
+                val sharedPreferences = getSharedPreferences("user_prefs", Context.MODE_PRIVATE)
+                with(sharedPreferences.edit()) {
+                    putInt("step_count", _stepCount.value)
+                    apply()
+                }
                 updateStepCount()
             }
         }
