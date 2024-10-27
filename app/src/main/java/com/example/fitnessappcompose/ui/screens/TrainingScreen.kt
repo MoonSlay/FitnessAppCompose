@@ -357,10 +357,10 @@ fun getSections(): List<Triple<String, String, List<Training>>> {
                 "Flexibility and Mobility Routine",
                 "Enhance your flexibility with these restorative stretches.",
                 exercises = listOf(
-                    exercises[27].copy(sets = 1, repetitions = 1), // Forward Fold
-                    exercises[28].copy(sets = 1, repetitions = 1), // Child's Pose
-                    exercises[29].copy(sets = 1, repetitions = 1), // Cobra Stretch
-                    exercises[30].copy(sets = 1, repetitions = 1)  // Cat-Cow Stretch
+                    exercises[27].copy(sets = 3, repetitions = 10), // Forward Fold
+                    exercises[28].copy(sets = 2, repetitions = 10), // Child's Pose
+                    exercises[29].copy(sets = 3, repetitions = 12), // Cobra Stretch
+                    exercises[30].copy(sets = 3, repetitions = 10)  // Cat-Cow Stretch
                 ),
                 duration = "15 minutes"
             )

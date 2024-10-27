@@ -17,6 +17,8 @@ import kotlinx.coroutines.delay
 import kotlinx.coroutines.launch
 import android.util.Log
 import com.example.fitnessappcompose.ui.screens.Exercise
+import kotlin.math.ceil
+
 
 data class ExerciseSetState(
     val exercise: Exercise,
@@ -69,7 +71,7 @@ fun TrainingSessionScreen(navController: NavController, sharedViewModel: SharedV
                     val caloriesBurned = computeCaloriesBurned(checkedExercises, timer)
                     Log.d("TrainingSessionScreen", "Calories Burned: $caloriesBurned")
                     sharedViewModel.setCaloriesBurned(caloriesBurned)
-                    navController.navigate("report")
+                    navController.navigate("sessionOver")
                 },
                 modifier = Modifier.fillMaxWidth()
             ) {
@@ -80,7 +82,8 @@ fun TrainingSessionScreen(navController: NavController, sharedViewModel: SharedV
 }
 
 fun computeCaloriesBurned(checkedExercises: Int, duration: Int): Int {
-    val calories = checkedExercises * (duration / 1) * 5
+    val durationInMinutes = ceil(duration / 60.0).toInt()
+    val calories = checkedExercises * durationInMinutes * 5
     Log.d("computeCaloriesBurned", "Checked Exercises: $checkedExercises, Duration: $duration, Calories: $calories")
     return calories
 }
