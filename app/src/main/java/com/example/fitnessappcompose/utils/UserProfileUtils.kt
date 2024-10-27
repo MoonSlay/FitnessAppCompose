@@ -4,34 +4,6 @@ package com.example.fitnessappcompose.utils
 import android.content.Context
 import android.util.Log
 
-fun setGoal(context: Context, goal: String) {
-    val sharedPreferences = context.getSharedPreferences("user_profile", Context.MODE_PRIVATE)
-    with(sharedPreferences.edit()) {
-        putString("goal", goal)
-        apply()
-    }
-    Log.d("UserProfileUtils", "Goal saved: $goal")
-}
-
-fun getGoal(context: Context): String {
-    val sharedPreferences = context.getSharedPreferences("user_profile", Context.MODE_PRIVATE)
-    return sharedPreferences.getString("goal", "") ?: ""
-}
-
-fun isUserProfileSetUp(context: Context): Boolean {
-    val sharedPreferences = context.getSharedPreferences("user_profile", Context.MODE_PRIVATE)
-    return sharedPreferences.getBoolean("is_set_up", false)
-}
-
-fun setUserProfileSetUp(context: Context) {
-    val sharedPreferences = context.getSharedPreferences("user_profile", Context.MODE_PRIVATE)
-    with(sharedPreferences.edit()) {
-        putBoolean("is_set_up", true)
-        apply()
-    }
-    Log.d("UserProfileUtils", "User profile setup state saved")
-}
-
 fun setFullName(context: Context, fullName: String) {
     val sharedPreferences = context.getSharedPreferences("user_profile", Context.MODE_PRIVATE)
     with(sharedPreferences.edit()) {

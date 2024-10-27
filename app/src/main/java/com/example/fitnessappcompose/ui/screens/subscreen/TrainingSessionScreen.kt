@@ -1,5 +1,5 @@
 // TrainingSessionScreen.kt
-package com.example.fitnessappcompose.ui.screens
+package com.example.fitnessappcompose.ui.screens.subscreen
 
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.lazy.LazyColumn
@@ -16,6 +16,7 @@ import com.example.fitnessappcompose.utils.SharedViewModel
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.launch
 import android.util.Log
+import com.example.fitnessappcompose.ui.screens.Exercise
 
 data class ExerciseSetState(
     val exercise: Exercise,
@@ -68,7 +69,7 @@ fun TrainingSessionScreen(navController: NavController, sharedViewModel: SharedV
                     val caloriesBurned = computeCaloriesBurned(checkedExercises, timer)
                     Log.d("TrainingSessionScreen", "Calories Burned: $caloriesBurned")
                     sharedViewModel.setCaloriesBurned(caloriesBurned)
-                    navController.navigate("report_screen")
+                    navController.navigate("report")
                 },
                 modifier = Modifier.fillMaxWidth()
             ) {

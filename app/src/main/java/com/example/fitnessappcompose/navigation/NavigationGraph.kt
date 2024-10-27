@@ -10,6 +10,10 @@ import com.example.fitnessappcompose.ui.screens.*
 import com.example.fitnessappcompose.ui.screens.auth.LoginScreen
 import com.example.fitnessappcompose.ui.screens.auth.RegisterScreen
 import androidx.lifecycle.viewmodel.compose.viewModel
+import com.example.fitnessappcompose.ui.screens.subscreen.GoalDataScreen
+import com.example.fitnessappcompose.ui.screens.subscreen.ProfileDataScreen
+import com.example.fitnessappcompose.ui.screens.subscreen.TrainingDetailScreen
+import com.example.fitnessappcompose.ui.screens.subscreen.TrainingSessionScreen
 import com.example.fitnessappcompose.utils.SharedViewModel
 
 @Composable
@@ -22,11 +26,12 @@ fun NavigationGraph(navController: NavHostController, modifier: Modifier = Modif
         composable("dashboard") { DashboardScreen() }
         composable("recipe") { RecipeScreen() }
         composable("training") { TrainingScreen(navController = navController, sharedViewModel = sharedViewModel) }
-        composable("report_screen") {
+        composable("report") {
             ReportScreen(sharedViewModel = sharedViewModel)
         }
         composable("profile") { ProfileScreen(navController = navController) }
         composable("profile_data") { ProfileDataScreen(navController = navController) }
+        composable("goal_data") { GoalDataScreen(navController = navController) }
         composable("trainingDetail") {
             TrainingDetailScreen(navController = navController, sharedViewModel = sharedViewModel)
         }

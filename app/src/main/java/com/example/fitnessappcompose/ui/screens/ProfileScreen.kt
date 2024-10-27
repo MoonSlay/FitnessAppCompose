@@ -27,7 +27,11 @@ fun ProfileScreen(navController: NavController) {
         Text(text = "Profile Screen", style = MaterialTheme.typography.headlineSmall)
         Spacer(modifier = Modifier.height(20.dp))
         Button(onClick = { navController.navigate("profile_data") }) {
-            Text("View Profile Data")
+            Text("Profile")
+        }
+        Spacer(modifier = Modifier.height(20.dp))
+        Button(onClick = { navController.navigate("goal_data") }) {
+            Text("Goals")
         }
         Spacer(modifier = Modifier.height(20.dp))
         Button(onClick = {

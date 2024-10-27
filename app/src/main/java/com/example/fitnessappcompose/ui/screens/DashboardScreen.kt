@@ -5,9 +5,7 @@ import android.content.Context
 import android.content.pm.PackageManager
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.lazy.LazyColumn
-import androidx.compose.material3.CardDefaults
-import androidx.compose.material3.ElevatedCard
-import androidx.compose.material3.Text
+import androidx.compose.material3.*
 import androidx.compose.runtime.*
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
@@ -19,15 +17,9 @@ import androidx.compose.ui.unit.sp
 import androidx.core.app.ActivityCompat
 import androidx.core.content.ContextCompat
 import com.example.fitnessappcompose.MainActivity
-import com.example.fitnessappcompose.utils.getUsername
+import com.example.fitnessappcompose.utils.*
 import kotlinx.coroutines.delay
 import android.Manifest
-import androidx.compose.foundation.layout.*
-import androidx.compose.material3.CircularProgressIndicator
-import androidx.compose.material3.MaterialTheme
-import androidx.compose.material3.Surface
-import androidx.compose.material3.Text
-import androidx.compose.runtime.Composable
 import androidx.compose.runtime.livedata.observeAsState
 import androidx.compose.ui.graphics.Color
 import androidx.lifecycle.viewmodel.compose.viewModel
@@ -43,6 +35,11 @@ fun DashboardScreen(sharedViewModel: SharedViewModel = viewModel()) {
     val dailyStepCount by mainActivity.stepCount.collectAsState(initial = 0)
     val dailyCaloriesBurned by sharedViewModel.dailyCaloriesBurned.observeAsState(0)
 
+    // Retrieve goals from shared preferences
+    val goalDailySC = remember { getGoalDailySC(context).toIntOrNull() ?: 10000 } // Default value if not set
+    val goalDailyCB = remember { getGoalDailyCB(context).toIntOrNull() ?: 500 } // Default value if not set
+
+    // List of motivational quotes
     val quotes = listOf(
         "The only bad workout is the one that didn't happen.",
         "Push yourself, because no one else is going to do it for you.",
@@ -50,9 +47,9 @@ fun DashboardScreen(sharedViewModel: SharedViewModel = viewModel()) {
         "The body achieves what the mind believes.",
         "Don't limit your challenges, challenge your limits."
     )
-
     var currentQuote by remember { mutableStateOf(quotes[0]) }
 
+    // Change quote every 5 seconds
     LaunchedEffect(Unit) {
         while (true) {
             delay(5000)
@@ -76,7 +73,12 @@ fun DashboardScreen(sharedViewModel: SharedViewModel = viewModel()) {
         }
 
         item {
-            GoalProgressSurface(stepCount = dailyStepCount, targetSteps = 100, caloriesBurned = dailyCaloriesBurned, targetCalories = 100)
+            GoalProgressSurface(
+                stepCount = dailyStepCount,
+                targetSteps = goalDailySC,
+                caloriesBurned = dailyCaloriesBurned,
+                targetCalories = goalDailyCB
+            )
         }
 
         item {
@@ -92,30 +94,24 @@ fun DashboardScreen(sharedViewModel: SharedViewModel = viewModel()) {
 
 @Composable
 fun GoalProgressSurface(stepCount: Int, targetSteps: Int, caloriesBurned: Int, targetCalories: Int) {
-    Surface(
+    Row(
         modifier = Modifier
             .fillMaxWidth()
             .padding(vertical = 20.dp)
             .height(150.dp),
-        color = MaterialTheme.colorScheme.surface,
-        shadowElevation = 4.dp
+        verticalAlignment = Alignment.CenterVertically,
+        horizontalArrangement = Arrangement.SpaceEvenly
     ) {
-        Row(
-            modifier = Modifier.fillMaxSize(),
-            verticalAlignment = Alignment.CenterVertically,
-            horizontalArrangement = Arrangement.SpaceEvenly
-        ) {
-            CircularProgressIndicatorWithText(
-                progress = min(stepCount / targetSteps.toFloat(), 1f),
-                label = "Steps",
-                value = "$stepCount/$targetSteps"
-            )
-            CircularProgressIndicatorWithText(
-                progress = min(caloriesBurned / targetCalories.toFloat(), 1f),
-                label = "Calories",
-                value = "$caloriesBurned/$targetCalories"
-            )
-        }
+        CircularProgressIndicatorWithText(
+            progress = min(stepCount / targetSteps.toFloat(), 1f),
+            label = "Steps",
+            value = "$stepCount/$targetSteps"
+        )
+        CircularProgressIndicatorWithText(
+            progress = min(caloriesBurned / targetCalories.toFloat(), 1f),
+            label = "Calories",
+            value = "$caloriesBurned/$targetCalories"
+        )
     }
 }
 
