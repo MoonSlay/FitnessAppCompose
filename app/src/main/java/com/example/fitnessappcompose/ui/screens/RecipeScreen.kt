@@ -1,4 +1,3 @@
-// RecipeScreen.kt
 package com.example.fitnessappcompose.ui.screens
 
 import androidx.compose.foundation.Image
@@ -24,6 +23,7 @@ import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.runtime.saveable.rememberSaveable
 import androidx.compose.runtime.saveable.Saver
 
+// Recipe data class
 data class Recipe(
     val imageResId: Int,
     val name: String,
@@ -33,6 +33,7 @@ data class Recipe(
     val nutritionalInfo: String
 )
 
+// Default recipe to be displayed initially
 val defaultRecipe = Recipe(
     imageResId = R.drawable.lunch_tuna_salad,
     name = "Default Recipe",
@@ -42,8 +43,9 @@ val defaultRecipe = Recipe(
     nutritionalInfo = "Default nutritional info"
 )
 
+// Define how to save and restore the Recipe object
 val RecipeSaver = Saver<Recipe, List<Any>>(
-    save = { recipe ->
+    save = { recipe -> // Function to save the recipe properties
         listOf(
             recipe.imageResId,
             recipe.name,
@@ -53,7 +55,7 @@ val RecipeSaver = Saver<Recipe, List<Any>>(
             recipe.nutritionalInfo
         )
     },
-    restore = { list ->
+    restore = { list -> // Function to restore the recipe properties
         Recipe(
             imageResId = list[0] as Int,
             name = list[1] as String,
@@ -65,10 +67,13 @@ val RecipeSaver = Saver<Recipe, List<Any>>(
     }
 )
 
+// Opt-in to use experimental APIs
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun RecipeScreen() {
+    // Define sections of recipes (e.g., Breakfast Recipes)
     val sections = listOf(
+        // Breakfast recipes
         Triple("Breakfast Recipes", "Start your day with these delicious breakfast recipes", listOf(
             Recipe(
                 R.drawable.breakfast_steak_eggs,
@@ -170,6 +175,8 @@ fun RecipeScreen() {
             )
 
         )),
+
+        // Lunch recipes
         Triple("Lunch Recipes", "Power through your day with these high-protein lunch options", listOf(
             Recipe(
                 R.drawable.lunch_turkey_stir_fry,
@@ -280,13 +287,165 @@ fun RecipeScreen() {
             )
 
         )),
+
+
+        // Dinner recipes
+        Triple("Dinner Recipes", "End your day with these wholesome dinner options", listOf(
+            Recipe(
+                R.drawable.dinner_whole_wheat_fettuccine,
+                "Whole Wheat Fettuccine",
+                "A healthy pasta option with whole wheat fettuccine and a rich, hearty sauce.",
+                ingredients = listOf("200g whole wheat fettuccine", "1 cup tomato sauce", "1 garlic clove, minced", "1 tablespoon olive oil", "Salt", "Pepper"),
+                instructions = "1. Cook fettuccine according to package instructions.\n2. In a pan, heat olive oil and sauté garlic until fragrant.\n3. Add tomato sauce, salt, and pepper, and simmer for 5 minutes.\n4. Toss with fettuccine and serve warm.",
+                nutritionalInfo = "Protein: 10g\nFats: 5g\nCarbohydrates: 40g\nFiber: 6g\nCalories: 250 kcal\nSodium: 200 mg\nCholesterol: 0 mg\nVitamins: Vitamin A (5000 IU), Vitamin C (8 mg), Vitamin B6 (0.3 mg)\nMinerals: Calcium (40 mg), Iron (3 mg), Magnesium (45 mg)"
+            ),
+            Recipe(
+                R.drawable.dinner_thal_curry_veggle,
+                "Thai Curry Veggie",
+                "A creamy and aromatic Thai curry with a mix of fresh vegetables.",
+                ingredients = listOf("1 cup mixed vegetables", "1 tablespoon Thai curry paste", "1 cup coconut milk", "1 tablespoon olive oil", "Salt", "Pepper"),
+                instructions = "1. Heat oil in a pot and cook curry paste for 1 minute.\n2. Add vegetables and coconut milk. Simmer for 10 minutes.\n3. Season with salt and pepper and serve with rice.",
+                nutritionalInfo = "Protein: 5g\nFats: 10g\nCarbohydrates: 20g\nFiber: 4g\nCalories: 200 kcal\nSodium: 300 mg\nCholesterol: 0 mg\nVitamins: Vitamin A (1000 IU), Vitamin C (15 mg), Vitamin B6 (0.1 mg)\nMinerals: Calcium (30 mg), Iron (1 mg), Magnesium (30 mg)"
+            ),
+            Recipe(
+                R.drawable.dinner_sweet___tangy_chicken_burgers,
+                "Sweet & Tangy Chicken Burgers",
+                "Juicy chicken burgers with a sweet and tangy sauce.",
+                ingredients = listOf("200g ground chicken", "1 tablespoon BBQ sauce", "1 tablespoon honey", "Buns for serving", "Salt", "Pepper"),
+                instructions = "1. Combine chicken with salt, pepper, BBQ sauce, and honey.\n2. Form patties and cook on a skillet for 5 minutes each side.\n3. Serve on buns with your favorite toppings.",
+                nutritionalInfo = "Protein: 20g\nFats: 8g\nCarbohydrates: 25g\nFiber: 2g\nCalories: 300 kcal\nSodium: 450 mg\nCholesterol: 60 mg\nVitamins: Vitamin A (200 IU), Vitamin C (2 mg), Vitamin B6 (0.4 mg)\nMinerals: Calcium (20 mg), Iron (1 mg), Magnesium (20 mg)"
+            ),
+            Recipe(
+                R.drawable.dinner_roasted_salmon,
+                "Roasted Salmon",
+                "Flavorful and nutritious roasted salmon seasoned to perfection.",
+                ingredients = listOf("150g salmon fillet", "1 tablespoon olive oil", "Salt", "Pepper", "Fresh herbs for garnish"),
+                instructions = "1. Preheat oven to 400°F. Season salmon with salt and pepper.\n2. Drizzle with olive oil and bake for 12-15 minutes.\n3. Garnish with fresh herbs and serve.",
+                nutritionalInfo = "Protein: 30g\nFats: 15g\nCarbohydrates: 0g\nFiber: 0g\nCalories: 250 kcal\nSodium: 80 mg\nCholesterol: 70 mg\nVitamins: Vitamin D (600 IU), Vitamin B12 (3 mcg)\nMinerals: Calcium (20 mg), Iron (0.5 mg), Magnesium (25 mg)"
+            ),
+            Recipe(
+                R.drawable.dinner_ribbony_shrimp,
+                "Ribbony Shrimp",
+                "Delicious shrimp served with ribbon-like vegetables for a unique texture.",
+                ingredients = listOf("200g shrimp", "1 zucchini, peeled into ribbons", "1 carrot, peeled into ribbons", "1 tablespoon olive oil", "Salt", "Pepper"),
+                instructions = "1. Heat oil in a pan, cook shrimp for 2-3 minutes.\n2. Add vegetable ribbons, salt, and pepper, cook until tender.\n3. Serve warm with a sprinkle of herbs.",
+                nutritionalInfo = "Protein: 25g\nFats: 6g\nCarbohydrates: 5g\nFiber: 2g\nCalories: 180 kcal\nSodium: 240 mg\nCholesterol: 125 mg\nVitamins: Vitamin A (1200 IU), Vitamin C (5 mg), Vitamin B6 (0.1 mg)\nMinerals: Calcium (40 mg), Iron (1 mg), Magnesium (40 mg)"
+            ),
+            Recipe(
+                R.drawable.dinner_puttanesca,
+                "Puttanesca",
+                "A classic Italian pasta dish with a tangy tomato-based sauce.",
+                ingredients = listOf("200g pasta", "1 cup tomato sauce", "1/4 cup olives", "1 tablespoon capers", "1 garlic clove, minced", "Salt", "Pepper"),
+                instructions = "1. Cook pasta according to package instructions.\n2. In a pan, heat garlic, add tomato sauce, olives, and capers.\n3. Toss with pasta and serve hot.",
+                nutritionalInfo = "Protein: 12g\nFats: 8g\nCarbohydrates: 45g\nFiber: 6g\nCalories: 300 kcal\nSodium: 400 mg\nCholesterol: 0 mg\nVitamins: Vitamin A (500 IU), Vitamin C (8 mg), Vitamin B6 (0.2 mg)\nMinerals: Calcium (30 mg), Iron (2 mg), Magnesium (40 mg)"
+            ),
+            Recipe(
+                R.drawable.dinner_pork_tenderloin,
+                "Pork Tenderloin",
+                "Juicy pork tenderloin with a flavorful seasoning.",
+                ingredients = listOf("200g pork tenderloin", "1 tablespoon olive oil", "Salt", "Pepper", "Fresh herbs"),
+                instructions = "1. Preheat oven to 375°F. Season pork with salt and pepper.\n2. Heat oil in a skillet and sear pork on all sides.\n3. Transfer to oven and roast for 20 minutes. Slice and serve.",
+                nutritionalInfo = "Protein: 25g\nFats: 12g\nCarbohydrates: 0g\nFiber: 0g\nCalories: 200 kcal\nSodium: 60 mg\nCholesterol: 75 mg\nVitamins: Vitamin B6 (0.4 mg), Vitamin B12 (1 mcg)\nMinerals: Calcium (15 mg), Iron (1 mg), Magnesium (20 mg)"
+            ),
+            Recipe(
+                R.drawable.dinner_pan_seared_salmon,
+                "Pan Seared Salmon",
+                "Crispy on the outside, tender on the inside pan-seared salmon.",
+                ingredients = listOf("150g salmon", "1 tablespoon olive oil", "Salt", "Pepper"),
+                instructions = "1. Season salmon with salt and pepper.\n2. Heat oil in a pan over medium-high heat, sear salmon for 4-5 minutes per side.\n3. Serve with lemon wedges.",
+                nutritionalInfo = "Protein: 30g\nFats: 15g\nCarbohydrates: 0g\nFiber: 0g\nCalories: 250 kcal\nSodium: 90 mg\nCholesterol: 70 mg\nVitamins: Vitamin D (500 IU), Vitamin B12 (3 mcg)\nMinerals: Calcium (25 mg), Iron (0.6 mg), Magnesium (27 mg)"
+            ),
+            Recipe(
+                R.drawable.dinner_kale_and_artlchoke_chicken_casserole,
+                "Kale and Artichoke Chicken Casserole",
+                "A comforting casserole with kale, artichokes, and chicken.",
+                ingredients = listOf("200g chicken breast", "1 cup kale, chopped", "½ cup artichoke hearts", "1 cup cream", "Salt", "Pepper"),
+                instructions = "1. Preheat oven to 350°F. Combine ingredients in a casserole dish.\n2. Bake for 30 minutes until bubbly and golden.\n3. Serve warm.",
+                nutritionalInfo = "Protein: 25g\nFats: 18g\nCarbohydrates: 10g\nFiber: 5g\nCalories: 320 kcal\nSodium: 400 mg\nCholesterol: 85 mg\nVitamins: Vitamin A (12000 IU), Vitamin C (10 mg), Vitamin B6 (0.3 mg)\nMinerals: Calcium (50 mg), Iron (2 mg), Magnesium (60 mg)"
+            ),
+            Recipe(
+                R.drawable.dinner_honey_soy_grilled_salmon_wtih_edamame,
+                "Honey Soy Grilled Salmon with Edamame",
+                "Grilled salmon with a sweet and savory honey soy glaze, served with edamame.",
+                ingredients = listOf("150g salmon", "1 tablespoon honey", "1 tablespoon soy sauce", "1/2 cup edamame", "Salt", "Pepper"),
+                instructions = "1. Marinate salmon in honey and soy sauce for 10 minutes.\n2. Grill for 4-5 minutes per side.\n3. Serve with steamed edamame.",
+                nutritionalInfo = "Protein: 32g\nFats: 12g\nCarbohydrates: 10g\nFiber: 3g\nCalories: 280 kcal\nSodium: 320 mg\nCholesterol: 65 mg\nVitamins: Vitamin B12 (2 mcg), Vitamin D (500 IU)\nMinerals: Calcium (30 mg), Iron (1 mg), Magnesium (35 mg)"
+            ),
+            Recipe(
+                R.drawable.dinner_healthy_tuna_grain_with_turmeric_sweet_potatoes_and_spicy_yogurt,
+                "Healthy Tuna Grain with Turmeric Sweet Potatoes and Spicy Yogurt",
+                "A nutritious grain bowl topped with tuna, turmeric sweet potatoes, and spicy yogurt.",
+                ingredients = listOf("1 can tuna", "1 cup cooked quinoa", "1 medium sweet potato", "1 tablespoon turmeric", "1/2 cup yogurt", "Chili powder", "Salt", "Pepper"),
+                instructions = "1. Peel and dice sweet potato, then toss with turmeric, salt, and pepper. Roast at 400°F for 25 minutes.\n2. In a bowl, combine quinoa and drained tuna.\n3. Top with roasted sweet potatoes and a dollop of yogurt mixed with chili powder.",
+                nutritionalInfo = "Protein: 28g\nFats: 8g\nCarbohydrates: 45g\nFiber: 6g\nCalories: 380 kcal\nSodium: 400 mg\nCholesterol: 40 mg\nVitamins: Vitamin A (12000 IU), Vitamin C (15 mg), Vitamin B6 (0.4 mg)\nMinerals: Calcium (50 mg), Iron (3 mg), Magnesium (70 mg)"
+            ),
+            Recipe(
+                R.drawable.dinner_garlic_shrimp_withchorlzo,
+                "Garlic Shrimp with Chorizo",
+                "Sizzling shrimp paired with spicy chorizo and garlic.",
+                ingredients = listOf("200g shrimp", "100g chorizo, sliced", "3 garlic cloves, minced", "1 tablespoon olive oil", "Salt", "Pepper"),
+                instructions = "1. Heat oil in a pan, add chorizo and cook for 3-4 minutes.\n2. Add garlic and shrimp, season with salt and pepper, and cook until shrimp are pink.\n3. Serve warm with crusty bread.",
+                nutritionalInfo = "Protein: 25g\nFats: 18g\nCarbohydrates: 2g\nFiber: 0g\nCalories: 280 kcal\nSodium: 600 mg\nCholesterol: 150 mg\nVitamins: Vitamin A (1000 IU), Vitamin C (3 mg), Vitamin B6 (0.2 mg)\nMinerals: Calcium (25 mg), Iron (1 mg), Magnesium (20 mg)"
+            ),
+            Recipe(
+                R.drawable.dinner_coconut_crusted_shrimp_with_pineapple_chili_sauce,
+                "Coconut Crusted Shrimp With Pineapple Chili Sauce",
+                "Crispy shrimp coated in coconut flakes served with a tangy pineapple sauce.",
+                ingredients = listOf("200g shrimp", "1/2 cup shredded coconut", "1/2 cup breadcrumbs", "1 egg", "1/2 cup pineapple, diced", "1 tablespoon chili sauce", "Salt", "Pepper"),
+                instructions = "1. Preheat oven to 375°F. Dip shrimp in egg, then coat with a mixture of coconut and breadcrumbs.\n2. Bake for 15-20 minutes until golden.\n3. For sauce, combine pineapple and chili sauce in a bowl. Serve with shrimp.",
+                nutritionalInfo = "Protein: 24g\nFats: 14g\nCarbohydrates: 18g\nFiber: 2g\nCalories: 320 kcal\nSodium: 300 mg\nCholesterol: 150 mg\nVitamins: Vitamin A (300 IU), Vitamin C (10 mg), Vitamin B6 (0.3 mg)\nMinerals: Calcium (20 mg), Iron (2 mg), Magnesium (25 mg)"
+            ),
+            Recipe(
+                R.drawable.dinner_chili_chicken,
+                "Chili Chicken",
+                "Spicy chicken stir-fried with bell peppers and onions.",
+                ingredients = listOf("200g chicken breast, sliced", "1 bell pepper, sliced", "1 onion, sliced", "2 tablespoons soy sauce", "1 tablespoon chili sauce", "1 tablespoon olive oil", "Salt", "Pepper"),
+                instructions = "1. Heat oil in a pan, add chicken, and cook until browned.\n2. Add bell pepper and onion, stir-fry for 5 minutes.\n3. Add soy sauce and chili sauce, cook for another 2 minutes. Serve warm.",
+                nutritionalInfo = "Protein: 30g\nFats: 10g\nCarbohydrates: 12g\nFiber: 2g\nCalories: 280 kcal\nSodium: 450 mg\nCholesterol: 75 mg\nVitamins: Vitamin A (800 IU), Vitamin C (20 mg), Vitamin B6 (0.5 mg)\nMinerals: Calcium (20 mg), Iron (2 mg), Magnesium (30 mg)"
+            ),
+            Recipe(
+                R.drawable.dinner_chicken_with_lemon_herb_sauce,
+                "Chicken With Lemon Herb Sauce",
+                "Grilled chicken topped with a zesty lemon herb sauce.",
+                ingredients = listOf("200g chicken breast", "1 lemon, juiced", "1 tablespoon olive oil", "Mixed herbs (parsley, thyme)", "Salt", "Pepper"),
+                instructions = "1. Season chicken with salt and pepper, grill for 6-7 minutes on each side.\n2. In a bowl, mix lemon juice, olive oil, and herbs.\n3. Drizzle sauce over grilled chicken before serving.",
+                nutritionalInfo = "Protein: 32g\nFats: 9g\nCarbohydrates: 1g\nFiber: 0g\nCalories: 220 kcal\nSodium: 70 mg\nCholesterol: 85 mg\nVitamins: Vitamin C (15 mg), Vitamin B6 (0.4 mg)\nMinerals: Calcium (10 mg), Iron (1 mg), Magnesium (20 mg)"
+            ),
+            Recipe(
+                R.drawable.dinner_chicken_katsu_with_ginger_rice,
+                "Chicken Katsu With Ginger Rice",
+                "Breaded chicken cutlet served with fragrant ginger rice.",
+                ingredients = listOf("200g chicken breast", "1 cup panko breadcrumbs", "1 cup cooked rice", "1 teaspoon ginger, grated", "1 egg", "Salt", "Pepper"),
+                instructions = "1. Season chicken with salt and pepper, dip in egg and coat with panko.\n2. Heat oil in a pan and fry chicken until golden.\n3. Mix ginger with cooked rice, serve chicken on top.",
+                nutritionalInfo = "Protein: 30g\nFats: 15g\nCarbohydrates: 40g\nFiber: 2g\nCalories: 400 kcal\nSodium: 350 mg\nCholesterol: 70 mg\nVitamins: Vitamin A (200 IU), Vitamin C (2 mg), Vitamin B6 (0.5 mg)\nMinerals: Calcium (30 mg), Iron (2 mg), Magnesium (40 mg)"
+            ),
+            Recipe(
+                R.drawable.dinner_cajun_cabbage_skillet,
+                "Cajun Cabbage Skillet",
+                "A spicy and flavorful skillet dish with cabbage and sausage.",
+                ingredients = listOf("1/2 head cabbage, chopped", "100g sausage, sliced", "1 onion, sliced", "1 tablespoon Cajun seasoning", "1 tablespoon olive oil", "Salt", "Pepper"),
+                instructions = "1. Heat oil in a skillet, add sausage and cook until browned.\n2. Add onion and cabbage, sprinkle with Cajun seasoning, and stir-fry until cabbage is tender.\n3. Serve warm.",
+                nutritionalInfo = "Protein: 15g\nFats: 12g\nCarbohydrates: 10g\nFiber: 4g\nCalories: 220 kcal\nSodium: 600 mg\nCholesterol: 30 mg\nVitamins: Vitamin A (500 IU), Vitamin C (20 mg), Vitamin B6 (0.2 mg)\nMinerals: Calcium (50 mg), Iron (2 mg), Magnesium (25 mg)"
+            ),
+            Recipe(
+                R.drawable.dinner_beef_stir_fry,
+                "Beef Stir Fry",
+                "Tender beef stir-fried with vegetables in a savory sauce.",
+                ingredients = listOf("200g beef, sliced", "1 cup mixed vegetables", "2 tablespoons soy sauce", "1 tablespoon olive oil", "1 garlic clove, minced", "Salt", "Pepper"),
+                instructions = "1. Heat oil in a pan, add garlic and beef, and cook until browned.\n2. Add vegetables and soy sauce, stir-fry until vegetables are tender.\n3. Serve hot over rice.",
+                nutritionalInfo = "Protein: 28g\nFats: 15g\nCarbohydrates: 15g\nFiber: 3g\nCalories: 350 kcal\nSodium: 700 mg\nCholesterol: 80 mg\nVitamins: Vitamin A (300 IU), Vitamin C (15 mg), Vitamin B6 (0.4 mg)\nMinerals: Calcium (20 mg), Iron (3 mg), Magnesium (35 mg)"
+            )
+        ))
     )
 
-
+    // Initialize BottomSheetScaffold state and coroutine scope
     val bottomSheetScaffoldState = rememberBottomSheetScaffoldState()
     val coroutineScope = rememberCoroutineScope()
+
+    // State to hold the currently selected recipe, using rememberSaveable for state persistence
     var selectedRecipe by rememberSaveable(stateSaver = RecipeSaver) { mutableStateOf(defaultRecipe) }
 
+    // Create a BottomSheetScaffold to display the recipe details
     BottomSheetScaffold(
         scaffoldState = bottomSheetScaffoldState,
         sheetContent = {
@@ -294,17 +453,20 @@ fun RecipeScreen() {
         },
         sheetPeekHeight = 0.dp
     ) {
+
         LazyColumn(
             modifier = Modifier
                 .fillMaxSize()
                 .padding(16.dp)
         ) {
+            // Iterate through each section and display them
             sections.forEach { (title, description, recipes) ->
                 item {
                     Section(title, description, recipes) { recipe ->
+                        // Launch a coroutine to expand the bottom sheet with the selected recipe
                         coroutineScope.launch {
-                            selectedRecipe = recipe
-                            bottomSheetScaffoldState.bottomSheetState.expand()
+                            selectedRecipe = recipe // Update the selected recipe
+                            bottomSheetScaffoldState.bottomSheetState.expand() // Expand the bottom sheet
                         }
                     }
                 }
@@ -313,15 +475,17 @@ fun RecipeScreen() {
     }
 }
 
+// Composable function to display the content of the bottom sheet
 @Composable
 fun BottomSheetContent(recipe: Recipe) {
-    val configuration = LocalConfiguration.current
+    val configuration = LocalConfiguration.current // Get current configuration
     val screenHeight = configuration.screenHeightDp.dp
 
+    // Display recipe details in a LazyColumn
     LazyColumn(
         modifier = Modifier
             .fillMaxWidth()
-            .heightIn(max = screenHeight * 0.8f)
+            .heightIn(max = screenHeight * 0.8f) // Set max height to 80% of screen height
             .padding(16.dp),
         horizontalAlignment = Alignment.CenterHorizontally
     ) {
@@ -335,41 +499,45 @@ fun BottomSheetContent(recipe: Recipe) {
                 contentDescription = "Recipe image",
                 modifier = Modifier
                     .size(200.dp)
-                    .clip(CircleShape)
+                    .clip(CircleShape) // Clip the image to a circle shape
             )
             Spacer(modifier = Modifier.height(16.dp))
-            Text(text = "Ingredients", style = MaterialTheme.typography.headlineSmall)
-            recipe.ingredients.forEach { ingredient ->
+            Text(text = "Ingredients", style = MaterialTheme.typography.headlineSmall) // Ingredients section header
+            recipe.ingredients.forEach { ingredient -> // List all ingredients
                 Text(text = ingredient, style = MaterialTheme.typography.bodyMedium)
             }
             Spacer(modifier = Modifier.height(16.dp))
-            Text(text = "Instructions", style = MaterialTheme.typography.headlineSmall)
-            Text(text = recipe.instructions, style = MaterialTheme.typography.bodyMedium)
+            Text(text = "Instructions", style = MaterialTheme.typography.headlineSmall) // Instructions section header
+            Text(text = recipe.instructions, style = MaterialTheme.typography.bodyMedium) // Display cooking instructions
             Spacer(modifier = Modifier.height(16.dp))
-            Text(text = "Nutritional Information", style = MaterialTheme.typography.headlineSmall)
-            Text(text = recipe.nutritionalInfo, style = MaterialTheme.typography.bodyMedium)
+            Text(text = "Nutritional Information", style = MaterialTheme.typography.headlineSmall) // Nutritional info section header
+            Text(text = recipe.nutritionalInfo, style = MaterialTheme.typography.bodyMedium) // Display nutritional information
         }
     }
 }
 
+// Composable function to display a section of recipes
 @Composable
 fun Section(title: String, description: String, recipes: List<Recipe>, onRecipeClick: (Recipe) -> Unit) {
     Column {
         Text(text = title, style = MaterialTheme.typography.headlineSmall)
         Text(text = description, style = MaterialTheme.typography.bodySmall)
         Spacer(modifier = Modifier.height(16.dp))
+
+        // Display recipes in a horizontally scrollable LazyRow
         LazyRow(
             modifier = Modifier.fillMaxWidth(),
             horizontalArrangement = Arrangement.spacedBy(8.dp)
         ) {
-            items(recipes) { recipe ->
-                RecipeCard(recipe, onRecipeClick)
+            items(recipes) { recipe -> // Iterate over each recipe in the list
+                RecipeCard(recipe, onRecipeClick) // Display each recipe as a card
             }
         }
         Spacer(modifier = Modifier.height(16.dp))
     }
 }
 
+// Composable function to display an individual recipe card
 @Composable
 fun RecipeCard(recipe: Recipe, onRecipeClick: (Recipe) -> Unit) {
     ElevatedCard(

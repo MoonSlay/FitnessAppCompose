@@ -51,13 +51,18 @@ fun TrainingDetailScreen(navController: NavController, sharedViewModel: SharedVi
                 }
                 item {
                     Spacer(modifier = Modifier.height(16.dp))
-                    Button(onClick = { navController.navigate("selectExercise") }) {
-                        Text(text = "Add Exercise")
+                    Row(
+                        modifier = Modifier.fillMaxWidth(),
+                        horizontalArrangement = Arrangement.SpaceBetween
+                    ) {
+                        Button(onClick = { navController.navigate("selectExercise") }) {
+                            Text(text = "Add Exercise")
+                        }
+                        Button(onClick = { navController.navigate("trainingSession") }) {
+                            Text(text = "Start Training")
+                        }
                     }
                     Spacer(modifier = Modifier.height(16.dp))
-                    Button(onClick = { navController.navigate("trainingSession") }) {
-                        Text(text = "Start Training")
-                    }
                 }
             }
         }

@@ -65,7 +65,7 @@ fun TrainingScreen(navController: NavController, sharedViewModel: SharedViewMode
         sheetPeekHeight = 0.dp
     ) {
         Column(modifier = Modifier.fillMaxSize().padding(5.dp)) {
-            Text(text = "Workout", style = MaterialTheme.typography.headlineSmall, modifier = Modifier.padding(bottom = 5.dp))
+            Text(text = "Training", style = MaterialTheme.typography.headlineSmall, modifier = Modifier.padding(bottom = 5.dp))
             TrainingList(
                 sections = getSections(),
                 onTrainingSelected = { training ->
@@ -99,9 +99,8 @@ fun TrainingList(
 @Composable
 fun TrainingSection(trainings: List<Training>, onTrainingClick: (Training) -> Unit) {
     Column {
-        Spacer(modifier = Modifier.height(5.dp))
         trainings.forEach { training -> TrainingCard(training, onTrainingClick) }
-        Spacer(modifier = Modifier.height(5.dp))
+        Spacer(modifier = Modifier.height(3.dp))
     }
 }
 
@@ -286,26 +285,10 @@ fun getSections(): List<Triple<String, String, List<Training>>> {
     val exercises = getExercises()
 
     return listOf(
-        // Morning Workouts
-        Triple("Morning Workouts", "Start your day with these energizing workouts", listOf(
-            Training(
-                R.drawable.ic_recipe,
-                "Morning Cardio Blast",
-                "A quick cardio workout to boost your energy for the day.",
-                exercises = listOf(
-                    exercises[0].copy(sets = 4, repetitions = 15), // Jumping Jacks
-                    exercises[1].copy(sets = 3, repetitions = 15), // Burpees
-                    exercises[2].copy(sets = 3, repetitions = 20), // High Knees
-                    exercises[3].copy(sets = 3, repetitions = 15)  // Mountain Climbers
-                ),
-                duration = "25 minutes"
-            )
-        )),
-
         // Upper Body Strength
         Triple("Upper Body Strength", "Build strength and tone your upper body", listOf(
             Training(
-                R.drawable.ic_recipe,
+                R.drawable.workout_upper,
                 "Upper Body Strength Workout",
                 "Strengthen your chest, shoulders, and arms with this workout.",
                 exercises = listOf(
@@ -321,7 +304,7 @@ fun getSections(): List<Triple<String, String, List<Training>>> {
         // Lower Body Strength
         Triple("Lower Body Strength", "Strengthen your legs and glutes with these exercises", listOf(
             Training(
-                R.drawable.ic_recipe,
+                R.drawable.workout_lower,
                 "Lower Body Strength Workout",
                 "Focus on building strength in your legs and glutes.",
                 exercises = listOf(
@@ -337,7 +320,7 @@ fun getSections(): List<Triple<String, String, List<Training>>> {
         // Core Workout
         Triple("Core Strength", "Engage and strengthen your core muscles", listOf(
             Training(
-                R.drawable.ic_recipe,
+                R.drawable.workout_core,
                 "Core Strength Workout",
                 "Target your abdominal muscles with this effective routine.",
                 exercises = listOf(
@@ -353,7 +336,7 @@ fun getSections(): List<Triple<String, String, List<Training>>> {
         // Flexibility and Mobility
         Triple("Flexibility and Mobility", "Improve flexibility and range of motion", listOf(
             Training(
-                R.drawable.ic_recipe,
+                R.drawable.workout_flexibility,
                 "Flexibility and Mobility Routine",
                 "Enhance your flexibility with these restorative stretches.",
                 exercises = listOf(
@@ -369,7 +352,7 @@ fun getSections(): List<Triple<String, String, List<Training>>> {
         // Full Body Workout
         Triple("Full Body Circuit", "A high-intensity workout targeting all muscle groups", listOf(
             Training(
-                R.drawable.ic_recipe,
+                R.drawable.workout_full,
                 "Full Body Circuit",
                 "Challenge your entire body with this intense circuit.",
                 exercises = listOf(
@@ -385,7 +368,7 @@ fun getSections(): List<Triple<String, String, List<Training>>> {
         // Endurance and Cardio
         Triple("Endurance Training", "Build stamina and endurance with this workout", listOf(
             Training(
-                R.drawable.ic_recipe,
+                R.drawable.workout_endurance,
                 "Endurance Training",
                 "Focus on building your cardiovascular endurance.",
                 exercises = listOf(

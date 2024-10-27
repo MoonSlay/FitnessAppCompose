@@ -20,25 +20,39 @@ import com.example.fitnessappcompose.MainActivity
 import com.example.fitnessappcompose.utils.*
 import kotlinx.coroutines.delay
 import android.Manifest
+import androidx.compose.foundation.text.ClickableText
 import androidx.compose.runtime.livedata.observeAsState
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.text.AnnotatedString
+import androidx.compose.ui.text.style.TextAlign
+import androidx.compose.ui.text.style.TextDecoration
 import androidx.lifecycle.viewmodel.compose.viewModel
 import androidx.navigation.NavHostController
 import kotlin.math.min
 
+@Suppress("DEPRECATION")
 @Composable
 fun DashboardScreen(navController: NavHostController, sharedViewModel: SharedViewModel = viewModel()) {
+
+    // Request permission to access activity recognition for step count
     RequestActivityRecognitionPermission()
 
+    // Retrieve username from shared preferences
     val context = LocalContext.current
     val username = remember { getUsername(context) }
+
+    // Retrieve daily step count and daily calories burned from shared view model
     val mainActivity = context as MainActivity
     val dailyStepCount by mainActivity.stepCount.collectAsState(initial = 0)
     val dailyCaloriesBurned by sharedViewModel.dailyCaloriesBurned.observeAsState(0)
 
     // Retrieve goals from shared preferences
-    val goalDailySC = remember { getGoalDailySC(context).toIntOrNull() ?: 10000 } // Default value
-    val goalDailyCB = remember { getGoalDailyCB(context).toIntOrNull() ?: 500 } // Default value
+    val goalDailySC = remember { getGoalDailySC(context).toIntOrNull() ?: 0 }
+    val goalDailyCB = remember { getGoalDailyCB(context).toIntOrNull() ?: 0 }
+
+    // Check if UserGoalUtils and UserProfileUtils are empty
+    val isGoalsSet = goalDailySC > 0 && goalDailyCB > 0
+    val isProfileSet = username.isNotBlank()
 
     // List of motivational quotes
     val quotes = listOf(
@@ -48,6 +62,8 @@ fun DashboardScreen(navController: NavHostController, sharedViewModel: SharedVie
         "The body achieves what the mind believes.",
         "Don't limit your challenges, challenge your limits."
     )
+
+    // Display a random quote
     var currentQuote by remember { mutableStateOf(quotes[0]) }
 
     // Change quote every 5 seconds
@@ -58,12 +74,52 @@ fun DashboardScreen(navController: NavHostController, sharedViewModel: SharedVie
         }
     }
 
+    // Display in a LazyColumn for vertical scrolling
     LazyColumn(
         modifier = Modifier
             .fillMaxSize()
             .padding(16.dp),
         horizontalAlignment = Alignment.CenterHorizontally,
     ) {
+
+        //Checks if goals and profile are set and prompts user to set them if not
+        item {
+            Column(
+                modifier = Modifier
+                    .fillMaxWidth()
+                    .padding(top = 20.dp),
+            ) {
+                if (!isGoalsSet) {
+                    ClickableText(
+                        text = AnnotatedString("Set up Goals!"),
+                        onClick = { navController.navigate("goal_data") },
+                        style = MaterialTheme.typography.bodyLarge.copy(
+                            color = Color.Red,
+                            fontWeight = FontWeight.Bold,
+                            textDecoration = TextDecoration.Underline,
+                            textAlign = TextAlign.Start
+                        )
+                    )
+                }
+
+                Spacer(modifier = Modifier.height(10.dp))
+
+                if (!isProfileSet) {
+                    ClickableText(
+                        text = AnnotatedString("Set up your Profile!"),
+                        onClick = { navController.navigate("profile_data") },
+                        style = MaterialTheme.typography.bodyLarge.copy(
+                            color = Color.Red,
+                            fontWeight = FontWeight.Bold,
+                            textDecoration = TextDecoration.Underline,
+                            textAlign = TextAlign.Start
+                        )
+                    )
+                }
+            }
+        }
+
+        // Welcome message
         item {
             Text(
                 text = "Welcome $username!",
@@ -73,6 +129,7 @@ fun DashboardScreen(navController: NavHostController, sharedViewModel: SharedVie
             )
         }
 
+        // Goal progress surface
         item {
             GoalProgressSurface(
                 stepCount = dailyStepCount,
@@ -82,6 +139,7 @@ fun DashboardScreen(navController: NavHostController, sharedViewModel: SharedVie
             )
         }
 
+        // Display a motivational quote
         item {
             Text(
                 text = currentQuote,
@@ -90,8 +148,11 @@ fun DashboardScreen(navController: NavHostController, sharedViewModel: SharedVie
                 modifier = Modifier.padding(top = 20.dp, bottom = 20.dp),
                 style = MaterialTheme.typography.bodyMedium
             )
+            Spacer(modifier = Modifier.height(50.dp))
         }
 
+
+        // Buttons to navigate to other screens
         item {
             Column(
                 modifier = Modifier
@@ -100,21 +161,31 @@ fun DashboardScreen(navController: NavHostController, sharedViewModel: SharedVie
                 horizontalAlignment = Alignment.CenterHorizontally,
                 verticalArrangement = Arrangement.SpaceEvenly // Space buttons evenly
             ) {
+                val buttonModifier = Modifier
+                    .fillMaxWidth()
+                    .padding(horizontal = 16.dp)
+                    .height(60.dp) // Set a fixed height for the buttons
+
                 Button(
                     onClick = { navController.navigate("recipe") },
+                    modifier = buttonModifier
                 ) {
-                    Text("Browse Recipes", fontSize = 18.sp) // Adjust text size for visibility
+                    Text("Browse Recipes", fontSize = 20.sp) // Adjust text size for visibility
                 }
+                Spacer(modifier = Modifier.height(15.dp)) // Add space between buttons
                 Button(
                     onClick = { navController.navigate("training") },
+                    modifier = buttonModifier
                 ) {
-                    Text("Start Training", fontSize = 18.sp) // Adjust text size for visibility
+                    Text("Start Training", fontSize = 20.sp) // Adjust text size for visibility
                 }
             }
         }
+
     }
 }
 
+// Handles the goal progress surface
 @Composable
 fun GoalProgressSurface(stepCount: Int, targetSteps: Int, caloriesBurned: Int, targetCalories: Int) {
     Card(
@@ -124,28 +195,41 @@ fun GoalProgressSurface(stepCount: Int, targetSteps: Int, caloriesBurned: Int, t
         elevation = CardDefaults.cardElevation(4.dp),
         colors = CardDefaults.cardColors(containerColor = MaterialTheme.colorScheme.surfaceVariant)
     ) {
-        Row(
+        Column(
             modifier = Modifier
                 .fillMaxWidth()
-                .padding(16.dp)
-                .height(150.dp),
-            verticalAlignment = Alignment.CenterVertically,
-            horizontalArrangement = Arrangement.SpaceEvenly
+                .padding(16.dp),
         ) {
-            CircularProgressIndicatorWithText(
-                progress = min(stepCount / targetSteps.toFloat(), 1f),
-                label = "Steps",
-                value = "$stepCount/$targetSteps"
+            Text(
+                text = "Daily Goals:",
+                fontSize = 20.sp,
+                fontWeight = FontWeight.Bold,
+                modifier = Modifier.padding(bottom = 8.dp)
             )
-            CircularProgressIndicatorWithText(
-                progress = min(caloriesBurned / targetCalories.toFloat(), 1f),
-                label = "Calories",
-                value = "$caloriesBurned/$targetCalories"
-            )
+            Row(
+                modifier = Modifier
+                    .fillMaxWidth()
+                    .height(150.dp),
+                verticalAlignment = Alignment.CenterVertically,
+                horizontalArrangement = Arrangement.SpaceEvenly
+            ) {
+                CircularProgressIndicatorWithText(
+                    progress = min(stepCount / targetSteps.toFloat(), 1f),
+                    label = "Steps",
+                    value = "$stepCount/$targetSteps"
+                )
+                Spacer(modifier = Modifier.width(10.dp))
+                CircularProgressIndicatorWithText(
+                    progress = min(caloriesBurned / targetCalories.toFloat(), 1f),
+                    label = "Calories",
+                    value = "$caloriesBurned/$targetCalories"
+                )
+            }
         }
     }
 }
 
+// Custom circular progress indicator with text
 @Composable
 fun CircularProgressIndicatorWithText(progress: Float, label: String, value: String) {
     Box(
@@ -153,10 +237,10 @@ fun CircularProgressIndicatorWithText(progress: Float, label: String, value: Str
         modifier = Modifier.size(120.dp)
     ) {
         CircularProgressIndicator(
-            progress = progress,
+            progress = { progress },
+            modifier = Modifier.fillMaxSize(),
             color = MaterialTheme.colorScheme.primary,
             strokeWidth = 8.dp,
-            modifier = Modifier.fillMaxSize()
         )
         Column(
             horizontalAlignment = Alignment.CenterHorizontally,
@@ -177,6 +261,7 @@ fun CircularProgressIndicatorWithText(progress: Float, label: String, value: Str
     }
 }
 
+// Request permission to access activity recognition for step count
 @Composable
 fun RequestActivityRecognitionPermission() {
     val context = LocalContext.current

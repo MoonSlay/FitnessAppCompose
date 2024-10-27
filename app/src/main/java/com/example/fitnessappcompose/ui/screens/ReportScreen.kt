@@ -47,16 +47,16 @@ fun ReportScreen(sharedViewModel: SharedViewModel = viewModel()) {
 
     // Fetching targets based on selected tab
     val targetSteps = when (selectedStepTab) {
-        0 -> getGoalDailySC(LocalContext.current).toIntOrNull() ?: 10000 // Daily target
-        1 -> getGoalWeeklySC(LocalContext.current).toIntOrNull() ?: 70000 // Weekly target (example: 10,000 steps * 7 days)
-        2 -> getGoalMonthlySC(LocalContext.current).toIntOrNull() ?: 300000 // Monthly target (example: 10,000 steps * 30 days)
+        0 -> getGoalDailySC(LocalContext.current).toIntOrNull() ?: 0 // Daily target
+        1 -> getGoalWeeklySC(LocalContext.current).toIntOrNull() ?: 0 // Weekly target (example: 10,000 steps * 7 days)
+        2 -> getGoalMonthlySC(LocalContext.current).toIntOrNull() ?: 0 // Monthly target (example: 10,000 steps * 30 days)
         else -> 10000 // Default to daily target
     }
 
     val targetCalories = when (selectedCaloriesTab) {
-        0 -> getGoalDailyCB(LocalContext.current).toIntOrNull() ?: 2000 // Daily target
-        1 -> getGoalWeeklyCB(LocalContext.current).toIntOrNull() ?: 14000 // Weekly target (example: 2000 calories * 7 days)
-        2 -> getGoalMonthlyCB(LocalContext.current).toIntOrNull() ?: 60000 // Monthly target (example: 2000 calories * 30 days)
+        0 -> getGoalDailyCB(LocalContext.current).toIntOrNull() ?: 0 // Daily target
+        1 -> getGoalWeeklyCB(LocalContext.current).toIntOrNull() ?: 0 // Weekly target (example: 2000 calories * 7 days)
+        2 -> getGoalMonthlyCB(LocalContext.current).toIntOrNull() ?: 0 // Monthly target (example: 2000 calories * 30 days)
         else -> 2000 // Default to daily target
     }
 

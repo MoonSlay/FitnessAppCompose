@@ -15,8 +15,8 @@ import androidx.lifecycle.viewmodel.compose.viewModel
 fun NavigationGraph(navController: NavHostController, modifier: Modifier = Modifier) {
     val sharedViewModel: SharedViewModel = viewModel()
 
-    NavHost(navController, startDestination = "dashboard", modifier = modifier) {
-        composable("dashboard") { DashboardScreen(navController = navController) }
+    NavHost(navController, startDestination = "home", modifier = modifier) {
+        composable("home") { DashboardScreen(navController = navController) }
         composable("recipe") { RecipeScreen() }
         composable("training") { TrainingScreen(navController = navController, sharedViewModel = sharedViewModel) }
         composable("report") { ReportScreen(sharedViewModel = sharedViewModel) }

@@ -30,8 +30,7 @@ data class ExerciseSetState(
 @Composable
 fun TrainingSessionScreen(navController: NavController, sharedViewModel: SharedViewModel = viewModel()) {
     val training = sharedViewModel.selectedTraining.observeAsState()
-    var timer by remember { mutableStateOf(0) }
-    val scope = rememberCoroutineScope()
+    var timer by remember { mutableIntStateOf(0) }
 
     LaunchedEffect(Unit) {
         while (true) {
@@ -42,11 +41,11 @@ fun TrainingSessionScreen(navController: NavController, sharedViewModel: SharedV
 
     training.value?.let {
         val exerciseSetStates = remember {
-            it.exercises?.flatMap { exercise ->
+            it.exercises.flatMap { exercise ->
                 (1..(exercise.sets ?: 0)).map { setNumber ->
                     ExerciseSetState(exercise, setNumber)
                 }
-            }?.toMutableStateList() ?: mutableStateListOf()
+            }.toMutableStateList()
         }
 
         Column(
@@ -91,7 +90,7 @@ fun computeCaloriesBurned(checkedExercises: Int, duration: Int): Int {
 @Composable
 fun ExerciseCheckCard(state: ExerciseSetState) {
     var checked by remember { mutableStateOf(state.checked) }
-    var restTime by remember { mutableStateOf(state.restTime) }
+    var restTime by remember { mutableIntStateOf(state.restTime) }
     val scope = rememberCoroutineScope()
 
     ElevatedCard(

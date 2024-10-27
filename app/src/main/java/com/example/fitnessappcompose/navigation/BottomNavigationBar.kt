@@ -13,7 +13,7 @@ import com.example.fitnessappcompose.R
 fun BottomNavigationBar(navController: NavController) {
     NavigationBar {
         val items = listOf(
-            NavigationItem("Dashboard", Icons.Filled.Home),
+            NavigationItem("Home", Icons.Filled.Home),
             NavigationItem("Recipe", ImageVector.vectorResource(id = R.drawable.ic_recipe)),
             NavigationItem("Training", ImageVector.vectorResource(id = R.drawable.ic_fitness_center)),
             NavigationItem("Report", ImageVector.vectorResource(id = R.drawable.ic_report)),
