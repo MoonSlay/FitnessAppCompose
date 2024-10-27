@@ -3,16 +3,16 @@ package com.example.fitnessappcompose.utils
 
 import android.app.Application
 import android.content.Context
+import android.widget.Toast
 import androidx.lifecycle.AndroidViewModel
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
+import com.example.fitnessappcompose.ui.screens.Exercise
 import com.example.fitnessappcompose.ui.screens.Training
 import java.util.*
 
 class SharedViewModel(application: Application) : AndroidViewModel(application) {
     private val sharedPreferences = application.getSharedPreferences("fitness_prefs", Context.MODE_PRIVATE)
-    private val _selectedTraining = MutableLiveData<Training>()
-    val selectedTraining: LiveData<Training> get() = _selectedTraining
 
     private val _caloriesBurned = MutableLiveData<Int>()
     val caloriesBurned: LiveData<Int> get() = _caloriesBurned
@@ -101,7 +101,33 @@ class SharedViewModel(application: Application) : AndroidViewModel(application) 
         sharedPreferences.edit().putLong("last_reset_date", currentDate.timeInMillis).apply()
     }
 
+    private val _selectedTraining = MutableLiveData<Training?>()
+    val selectedTraining: MutableLiveData<Training?> get() = _selectedTraining
+
     fun selectTraining(training: Training) {
         _selectedTraining.value = training
     }
+
+    fun addExerciseToSelectedTraining(exercise: Exercise, sets: Int, repetitions: Int) {
+        _selectedTraining.value?.let { training ->
+            val updatedExercise = exercise.copy(sets = sets, repetitions = repetitions)
+            val updatedExercises = training.exercises.toMutableList().apply { add(updatedExercise) }
+            _selectedTraining.value = training.copy(exercises = updatedExercises)
+        }
+    }
+
+    fun removeSetFromExercise(context: Context, exercise: Exercise) {
+        _selectedTraining.value?.let { training ->
+            val updatedExercises = training.exercises.map {
+                if (it == exercise && it.sets != null && it.sets > 0) {
+                    it.copy(sets = it.sets - 1)
+                } else {
+                    it
+                }
+            }
+            _selectedTraining.value = training.copy(exercises = updatedExercises)
+            Toast.makeText(context, "Exercise Removed", Toast.LENGTH_SHORT).show()
+        }
+    }
+
 }

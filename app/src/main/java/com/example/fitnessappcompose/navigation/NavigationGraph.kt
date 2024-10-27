@@ -13,6 +13,7 @@ import com.example.fitnessappcompose.ui.screens.subscreen.TrainingDetailScreen
 import com.example.fitnessappcompose.ui.screens.subscreen.TrainingSessionScreen
 import com.example.fitnessappcompose.utils.SharedViewModel
 import androidx.lifecycle.viewmodel.compose.viewModel
+import com.example.fitnessappcompose.ui.screens.subscreen.SelectExerciseScreen
 
 @Composable
 fun NavigationGraph(navController: NavHostController, modifier: Modifier = Modifier) {
@@ -35,5 +36,8 @@ fun NavigationGraph(navController: NavHostController, modifier: Modifier = Modif
             TrainingSessionScreen(navController = navController, sharedViewModel = sharedViewModel)
         }
         composable("settings") { SettingsScreen(navController = navController) }
+        composable("selectExercise") {
+            SelectExerciseScreen(navController, sharedViewModel)
+        }
     }
 }
