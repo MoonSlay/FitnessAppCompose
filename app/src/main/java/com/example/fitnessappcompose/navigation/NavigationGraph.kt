@@ -19,7 +19,7 @@ fun NavigationGraph(navController: NavHostController, modifier: Modifier = Modif
     val sharedViewModel: SharedViewModel = viewModel()
 
     NavHost(navController, startDestination = "dashboard", modifier = modifier) {
-        composable("dashboard") { DashboardScreen() }
+        composable("dashboard") { DashboardScreen(navController = navController) }
         composable("recipe") { RecipeScreen() }
         composable("training") { TrainingScreen(navController = navController, sharedViewModel = sharedViewModel) }
         composable("report") {
@@ -34,5 +34,6 @@ fun NavigationGraph(navController: NavHostController, modifier: Modifier = Modif
         composable("trainingSession") {
             TrainingSessionScreen(navController = navController, sharedViewModel = sharedViewModel)
         }
+        composable("settings") { SettingsScreen(navController = navController) }
     }
 }

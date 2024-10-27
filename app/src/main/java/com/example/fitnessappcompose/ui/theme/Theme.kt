@@ -1,4 +1,4 @@
-package com.example.compose
+package com.example.fitnessappcompose.ui.theme
 
 import android.app.Activity
 import android.os.Build
@@ -10,6 +10,7 @@ import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.toArgb
 import androidx.compose.ui.platform.LocalContext
 import com.example.fitnessappcompose.ui.theme.AppTypography
+
 
 private val lightScheme = lightColorScheme(
     primary = primaryLight,

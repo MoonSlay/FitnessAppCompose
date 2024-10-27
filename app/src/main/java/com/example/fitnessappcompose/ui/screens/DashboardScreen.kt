@@ -23,12 +23,13 @@ import android.Manifest
 import androidx.compose.runtime.livedata.observeAsState
 import androidx.compose.ui.graphics.Color
 import androidx.lifecycle.viewmodel.compose.viewModel
-import com.example.fitnessappcompose.utils.SharedViewModel
+import androidx.navigation.NavHostController
 import kotlin.math.min
 
 @Composable
-fun DashboardScreen(sharedViewModel: SharedViewModel = viewModel()) {
+fun DashboardScreen(navController: NavHostController, sharedViewModel: SharedViewModel = viewModel()) {
     RequestActivityRecognitionPermission()
+
     val context = LocalContext.current
     val username = remember { getUsername(context) }
     val mainActivity = context as MainActivity
@@ -36,8 +37,8 @@ fun DashboardScreen(sharedViewModel: SharedViewModel = viewModel()) {
     val dailyCaloriesBurned by sharedViewModel.dailyCaloriesBurned.observeAsState(0)
 
     // Retrieve goals from shared preferences
-    val goalDailySC = remember { getGoalDailySC(context).toIntOrNull() ?: 10000 } // Default value if not set
-    val goalDailyCB = remember { getGoalDailyCB(context).toIntOrNull() ?: 500 } // Default value if not set
+    val goalDailySC = remember { getGoalDailySC(context).toIntOrNull() ?: 10000 } // Default value
+    val goalDailyCB = remember { getGoalDailyCB(context).toIntOrNull() ?: 500 } // Default value
 
     // List of motivational quotes
     val quotes = listOf(
@@ -60,15 +61,15 @@ fun DashboardScreen(sharedViewModel: SharedViewModel = viewModel()) {
     LazyColumn(
         modifier = Modifier
             .fillMaxSize()
-            .padding(30.dp),
+            .padding(16.dp),
         horizontalAlignment = Alignment.CenterHorizontally,
     ) {
         item {
             Text(
-                text = "Welcome $username,",
+                text = "Welcome $username!",
                 fontSize = 30.sp,
                 fontWeight = FontWeight.Bold,
-                modifier = Modifier.padding(bottom = 50.dp)
+                modifier = Modifier.padding(bottom = 20.dp)
             )
         }
 
@@ -86,32 +87,62 @@ fun DashboardScreen(sharedViewModel: SharedViewModel = viewModel()) {
                 text = currentQuote,
                 fontSize = 18.sp,
                 fontWeight = FontWeight.Medium,
-                modifier = Modifier.padding(top = 20.dp)
+                modifier = Modifier.padding(top = 20.dp, bottom = 20.dp),
+                style = MaterialTheme.typography.bodyMedium
             )
+        }
+
+        item {
+            Column(
+                modifier = Modifier
+                    .fillMaxWidth()
+                    .padding(bottom = 16.dp),
+                horizontalAlignment = Alignment.CenterHorizontally,
+                verticalArrangement = Arrangement.SpaceEvenly // Space buttons evenly
+            ) {
+                Button(
+                    onClick = { navController.navigate("recipe") },
+                ) {
+                    Text("Browse Recipes", fontSize = 18.sp) // Adjust text size for visibility
+                }
+                Button(
+                    onClick = { navController.navigate("training") },
+                ) {
+                    Text("Start Training", fontSize = 18.sp) // Adjust text size for visibility
+                }
+            }
         }
     }
 }
 
 @Composable
 fun GoalProgressSurface(stepCount: Int, targetSteps: Int, caloriesBurned: Int, targetCalories: Int) {
-    Row(
+    Card(
         modifier = Modifier
             .fillMaxWidth()
-            .padding(vertical = 20.dp)
-            .height(150.dp),
-        verticalAlignment = Alignment.CenterVertically,
-        horizontalArrangement = Arrangement.SpaceEvenly
+            .padding(vertical = 16.dp),
+        elevation = CardDefaults.cardElevation(4.dp),
+        colors = CardDefaults.cardColors(containerColor = MaterialTheme.colorScheme.surfaceVariant)
     ) {
-        CircularProgressIndicatorWithText(
-            progress = min(stepCount / targetSteps.toFloat(), 1f),
-            label = "Steps",
-            value = "$stepCount/$targetSteps"
-        )
-        CircularProgressIndicatorWithText(
-            progress = min(caloriesBurned / targetCalories.toFloat(), 1f),
-            label = "Calories",
-            value = "$caloriesBurned/$targetCalories"
-        )
+        Row(
+            modifier = Modifier
+                .fillMaxWidth()
+                .padding(16.dp)
+                .height(150.dp),
+            verticalAlignment = Alignment.CenterVertically,
+            horizontalArrangement = Arrangement.SpaceEvenly
+        ) {
+            CircularProgressIndicatorWithText(
+                progress = min(stepCount / targetSteps.toFloat(), 1f),
+                label = "Steps",
+                value = "$stepCount/$targetSteps"
+            )
+            CircularProgressIndicatorWithText(
+                progress = min(caloriesBurned / targetCalories.toFloat(), 1f),
+                label = "Calories",
+                value = "$caloriesBurned/$targetCalories"
+            )
+        }
     }
 }
 

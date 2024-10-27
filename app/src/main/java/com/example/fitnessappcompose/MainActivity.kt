@@ -1,4 +1,3 @@
-// MainActivity.kt
 package com.example.fitnessappcompose
 
 import android.content.Context
@@ -16,14 +15,14 @@ import androidx.compose.foundation.layout.padding
 import androidx.compose.material3.Scaffold
 import androidx.compose.runtime.*
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.platform.LocalContext
 import androidx.lifecycle.ViewModelProvider
 import androidx.lifecycle.viewmodel.compose.viewModel
 import androidx.navigation.compose.rememberNavController
-import com.example.compose.AppTheme
 import com.example.fitnessappcompose.navigation.BottomNavigationBar
 import com.example.fitnessappcompose.navigation.NavigationGraph
+import com.example.fitnessappcompose.ui.theme.AppTheme
 import com.example.fitnessappcompose.utils.SharedViewModel
+import com.example.fitnessappcompose.utils.ThemeViewModel
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.update
@@ -54,7 +53,10 @@ class MainActivity : ComponentActivity(), SensorEventListener {
         sharedViewModel = ViewModelProvider(this).get(SharedViewModel::class.java)
 
         setContent {
-            AppTheme {
+            val themeViewModel: ThemeViewModel = viewModel()
+            val isDarkMode by themeViewModel.isDarkMode.collectAsState()
+
+            AppTheme(darkTheme = isDarkMode) {
                 val navController = rememberNavController()
 
                 LaunchedEffect(Unit) {
