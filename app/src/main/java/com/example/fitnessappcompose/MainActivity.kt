@@ -15,7 +15,6 @@ import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.padding
 import androidx.compose.material3.Scaffold
 import androidx.compose.runtime.*
-import androidx.compose.runtime.saveable.rememberSaveable
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.platform.LocalContext
 import androidx.lifecycle.ViewModelProvider
@@ -57,25 +56,6 @@ class MainActivity : ComponentActivity(), SensorEventListener {
         setContent {
             AppTheme {
                 val navController = rememberNavController()
-                val authViewModel: AuthViewModel = viewModel()
-                val isLoggedIn by authViewModel.isLoggedIn.collectAsState()
-
-                // Check login state from SharedPreferences
-                val context = LocalContext.current
-                LaunchedEffect(Unit) {
-                    val rememberMe = sharedPreferences.getBoolean("remember_me", false)
-                    if (rememberMe) {
-                        authViewModel.login()
-                    }
-                }
-
-                LaunchedEffect(isLoggedIn) {
-                    if (isLoggedIn) {
-                        navController.navigate("dashboard") {
-                            popUpTo("login") { inclusive = true }
-                        }
-                    }
-                }
 
                 LaunchedEffect(Unit) {
                     sensor?.let {
@@ -91,12 +71,8 @@ class MainActivity : ComponentActivity(), SensorEventListener {
 
                 Scaffold(
                     bottomBar = {
-                        if (isLoggedIn) {
-                            Log.d("MainActivity", "BottomNavigationBar is displayed")
-                            BottomNavigationBar(navController)
-                        } else {
-                            Log.d("MainActivity", "BottomNavigationBar is not displayed")
-                        }
+                        Log.d("MainActivity", "BottomNavigationBar is displayed")
+                        BottomNavigationBar(navController)
                     },
                     modifier = Modifier.fillMaxSize()
                 ) { innerPadding ->

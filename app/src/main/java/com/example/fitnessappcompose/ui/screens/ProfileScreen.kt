@@ -8,14 +8,11 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
-import androidx.lifecycle.viewmodel.compose.viewModel
 import androidx.navigation.NavController
 import androidx.navigation.compose.rememberNavController
-import com.example.fitnessappcompose.AuthViewModel
 
 @Composable
 fun ProfileScreen(navController: NavController) {
-    val authViewModel: AuthViewModel = viewModel()
 
     Column(
         modifier = Modifier
@@ -34,14 +31,6 @@ fun ProfileScreen(navController: NavController) {
             Text("Goals")
         }
         Spacer(modifier = Modifier.height(20.dp))
-        Button(onClick = {
-            authViewModel.logout()
-            navController.navigate("login") {
-                popUpTo("dashboard") { inclusive = true }
-            }
-        }) {
-            Text("Logout")
-        }
     }
 }
 
