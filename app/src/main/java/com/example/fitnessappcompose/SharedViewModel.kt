@@ -42,7 +42,6 @@ class SharedViewModel(application: Application) : AndroidViewModel(application) 
     fun setCaloriesBurned(calories: Int) {
         _caloriesBurned.value = calories
 
-
         val newDailyTotal = (_dailyCaloriesBurned.value ?: 0) + calories
         _dailyCaloriesBurned.value = newDailyTotal
         sharedPreferences.edit().putInt("daily_calories_burned", newDailyTotal).apply()

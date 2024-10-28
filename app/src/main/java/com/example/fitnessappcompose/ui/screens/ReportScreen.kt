@@ -28,8 +28,8 @@ fun ReportScreen(sharedViewModel: SharedViewModel = viewModel()) {
     val weeklyCaloriesBurned by sharedViewModel.weeklyCaloriesBurned.observeAsState(0)
     val monthlyCaloriesBurned by sharedViewModel.monthlyCaloriesBurned.observeAsState(0)
 
-    var selectedStepTab by remember { mutableStateOf(0) }
-    var selectedCaloriesTab by remember { mutableStateOf(0) }
+    var selectedStepTab by remember { mutableIntStateOf(0) }
+    var selectedCaloriesTab by remember { mutableIntStateOf(0) }
 
     val stepCount = when (selectedStepTab) {
         0 -> dailyStepCount

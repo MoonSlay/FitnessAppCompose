@@ -140,13 +140,29 @@ fun DashboardScreen(navController: NavHostController, sharedViewModel: SharedVie
 
         // Display a motivational quote
         item {
-            Text(
-                text = currentQuote,
-                fontSize = 18.sp,
-                fontWeight = FontWeight.Medium,
-                modifier = Modifier.padding(top = 20.dp, bottom = 20.dp),
-                style = MaterialTheme.typography.bodyMedium
-            )
+            Card(
+                modifier = Modifier
+                    .fillMaxWidth()
+                    .height(150.dp) // Set a fixed height for the card
+                    .padding(vertical = 16.dp), // Adjust outer padding as needed
+                elevation = CardDefaults.cardElevation(4.dp),
+                colors = CardDefaults.cardColors(containerColor = MaterialTheme.colorScheme.surfaceVariant)
+            ) {
+                // Center the content within the card
+                Box(
+                    contentAlignment = Alignment.Center, // Center the text inside the card
+                    modifier = Modifier.fillMaxSize()
+                ) {
+                    Text(
+                        text = currentQuote,
+                        fontSize = 18.sp,
+                        fontWeight = FontWeight.Medium,
+                        modifier = Modifier.padding(16.dp), // Add padding inside the card
+                        style = MaterialTheme.typography.bodyMedium,
+                        textAlign = TextAlign.Center // Center align the text
+                    )
+                }
+            }
             Spacer(modifier = Modifier.height(50.dp))
         }
 

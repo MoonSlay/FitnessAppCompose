@@ -55,9 +55,10 @@ class MainActivity : ComponentActivity(), SensorEventListener {
         // Initialize the ViewModel for shared data
         sharedViewModel = ViewModelProvider(this)[SharedViewModel::class.java]
 
-        // Retrieve saved step count from SharedPreferences when the app starts
+        // Retrieve saved step count and dark mode state from SharedPreferences when the app starts
         val sharedPreferences = getSharedPreferences("user_prefs", Context.MODE_PRIVATE)
         _stepCount.value = sharedPreferences.getInt("step_count", 0)
+        _isDarkMode.value = sharedPreferences.getBoolean("dark_mode", false)
 
         // Set the UI content
         setContent {
@@ -79,11 +80,17 @@ class MainActivity : ComponentActivity(), SensorEventListener {
 
     private fun toggleDarkMode(isDark: Boolean) {
         _isDarkMode.value = isDark
+        saveDarkModeState(isDark)
     }
 
-    /**
-     * Registers and unregisters the step detector sensor to listen for step events.
-     */
+    private fun saveDarkModeState(isDark: Boolean) {
+        val sharedPreferences = getSharedPreferences("user_prefs", Context.MODE_PRIVATE)
+        with(sharedPreferences.edit()) {
+            putBoolean("dark_mode", isDark)
+            apply()
+        }
+    }
+
     @SuppressLint("ComposableNaming")
     @Composable
     private fun registerSensor() {
@@ -99,21 +106,22 @@ class MainActivity : ComponentActivity(), SensorEventListener {
         }
     }
 
-    /**
-     * Callback that triggers each time the step detector sensor detects a step.
-     * Updates the step count, saves it to SharedPreferences, and updates the SharedViewModel.
-     */
     override fun onSensorChanged(sensorEvent: SensorEvent?) {
         if (sensorEvent?.sensor?.type == Sensor.TYPE_STEP_DETECTOR) {
             _stepCount.update { it + 1 }  // Increment step count
             saveStepCount()  // Save step count in SharedPreferences
-            sharedViewModel.setStepCount(1)  // Update SharedViewModel
+
+            // Assuming 0.04 calories burned per step
+            val caloriesBurnedPerStep = 0.04
+            val caloriesBurned = (1 * caloriesBurnedPerStep).toInt() // 1 step's worth of calories
+
+            // Update sharedViewModel with the calories burned
+            sharedViewModel.setCaloriesBurned(caloriesBurned)
+            sharedViewModel.setStepCount(1)  // Update step count in SharedViewModel
         }
     }
 
-    /**
-     * Saves the current step count to SharedPreferences for persistent storage.
-     */
+
     private fun saveStepCount() {
         val sharedPreferences = getSharedPreferences("user_prefs", Context.MODE_PRIVATE)
         with(sharedPreferences.edit()) {
@@ -122,9 +130,6 @@ class MainActivity : ComponentActivity(), SensorEventListener {
         }
     }
 
-    /**
-     * Required callback for sensor accuracy changes. Not used in this implementation.
-     */
     override fun onAccuracyChanged(sensor: Sensor?, accuracy: Int) {
         // Not used
     }
