@@ -38,27 +38,27 @@ fun ProfileScreen(
     val imageUri by remember { mutableStateOf<Uri?>(null) }
     var showDialog by remember { mutableStateOf(false) }
 
-    // List of avatar options
+    // List of avatar options with custom names
     val avatarOptions = listOf(
-        R.drawable.avatar_leon,
-        R.drawable.avatar_kurama,
-        R.drawable.avatar_mr_known,
-        R.drawable.avatar_chill_guy,
-        R.drawable.avatar_dark_side,
-        R.drawable.avatar_bored_monkey,
-        R.drawable.avatar_last_bender,
-        R.drawable.avatar_stylist_fox,
-        R.drawable.avatar_default_guy,
+        R.drawable.avatar_leon to "Leon",
+        R.drawable.avatar_kurama to "Kurama",
+        R.drawable.avatar_mr_known to "Unknown",
+        R.drawable.avatar_chill_guy to "Chill Guy",
+        R.drawable.avatar_dark_side to "Dark Side",
+        R.drawable.avatar_bored_monkey to "Bored Monkey",
+        R.drawable.avatar_last_bender to "Last Bender",
+        R.drawable.avatar_stylist_fox to "Stylist Fox",
+        R.drawable.avatar_default_guy to "Guy"
     )
 
-    // Dialog for avatar selection
+// Dialog for avatar selection
     if (showDialog) {
         AlertDialog(
             onDismissRequest = { showDialog = false },
             title = { Text("Choose an Avatar") },
             text = {
                 Column {
-                    avatarOptions.forEach { avatarId ->
+                    avatarOptions.forEach { (avatarId, avatarName) ->
                         Row(
                             modifier = Modifier
                                 .fillMaxWidth()
@@ -78,7 +78,7 @@ fun ProfileScreen(
                                     .clip(CircleShape)
                             )
                             Spacer(modifier = Modifier.width(8.dp))
-                            Text(text = "Avatar ${avatarId - R.drawable.cardio_cycling + 1}") // Display avatar number
+                            Text(text = avatarName) // Display avatar name
                         }
                     }
                 }
@@ -87,7 +87,6 @@ fun ProfileScreen(
             dismissButton = {}
         )
     }
-
     Column(
         modifier = Modifier
             .fillMaxSize()
