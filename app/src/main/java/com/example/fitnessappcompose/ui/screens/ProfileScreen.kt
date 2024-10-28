@@ -26,7 +26,11 @@ private const val PREFS_NAME = "profile_prefs"
 private const val KEY_SELECTED_AVATAR = "selected_avatar"
 
 @Composable
-fun ProfileScreen(navController: NavController) {
+fun ProfileScreen(
+    navController: NavController,
+    toggleDarkMode: (Boolean) -> Unit,
+    isDarkMode: Boolean
+) {
     val context = LocalContext.current
     val fullName = getFullName(context)
     val sharedPreferences = context.getSharedPreferences(PREFS_NAME, Context.MODE_PRIVATE)
@@ -116,7 +120,7 @@ fun ProfileScreen(navController: NavController) {
 
         // Full Name Text
         Text(text = fullName, style = MaterialTheme.typography.titleLarge)
-        Spacer(modifier = Modifier.height(40.dp))
+        Spacer(modifier = Modifier.height(50.dp))
 
         // Navigation Buttons with fixed width
         val buttonModifier = Modifier
@@ -131,12 +135,19 @@ fun ProfileScreen(navController: NavController) {
             Text("Goals")
         }
         Spacer(modifier = Modifier.height(15.dp))
-        Button(onClick = { navController.navigate("settings") }, modifier = buttonModifier) {
-            Text("Settings")
-        }
-        Spacer(modifier = Modifier.height(15.dp))
-        Button(onClick = { /* Navigate to About Us */ }, modifier = buttonModifier) {
+        Button(onClick = { navController.navigate("about_us") }, modifier = buttonModifier) {
             Text("About Us")
         }
+
+        Spacer(modifier = Modifier.height(50.dp))
+        Switch(
+            checked = isDarkMode,
+            onCheckedChange = { isChecked ->
+                toggleDarkMode(isChecked)
+            }
+        )
+        Spacer(modifier = Modifier.height(15.dp))
+        Text(text = "Dark Mode", style = MaterialTheme.typography.bodyMedium)
+
     }
 }

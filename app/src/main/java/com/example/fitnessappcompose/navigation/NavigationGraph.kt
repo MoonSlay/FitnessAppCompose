@@ -20,17 +20,27 @@ fun NavigationGraph(
     val sharedViewModel: SharedViewModel = viewModel()
 
     NavHost(navController, startDestination = "home", modifier = modifier) {
+        // Dashboard screens
         composable("home") { DashboardScreen(navController = navController) }
+
+        // Recipe screens
         composable("recipe") { RecipeScreen() }
+
+        // Training screens
         composable("training") { TrainingScreen(navController = navController, sharedViewModel = sharedViewModel) }
-        composable("report") { ReportScreen(sharedViewModel = sharedViewModel) }
-        composable("profile") { ProfileScreen(navController = navController) }
-        composable("profile_data") { ProfileDataScreen(navController = navController) }
-        composable("goal_data") { GoalDataScreen(navController = navController) }
         composable("trainingDetail") { TrainingDetailScreen(navController = navController, sharedViewModel = sharedViewModel) }
         composable("trainingSession") { TrainingSessionScreen(navController = navController, sharedViewModel = sharedViewModel) }
-        composable("settings") { SettingsScreen(toggleDarkMode = toggleDarkMode, isDarkMode = isDarkMode) }
         composable("selectExercise") { SelectExerciseScreen(navController, sharedViewModel) }
         composable("sessionOver") { SessionOverScreen(navController = navController, sharedViewModel = sharedViewModel) }
+
+        // Report screens
+        composable("report") { ReportScreen(sharedViewModel = sharedViewModel) }
+
+        // Profile screens
+        composable("profile") { ProfileScreen(navController = navController, toggleDarkMode = toggleDarkMode, isDarkMode = isDarkMode) }
+        composable("profile_data") { ProfileDataScreen(navController = navController) }
+        composable("goal_data") { GoalDataScreen(navController = navController) }
+        composable("about_us") { AboutUsScreen(navController = navController) }
+
     }
 }
