@@ -11,7 +11,7 @@ import androidx.compose.ui.unit.dp
 import androidx.lifecycle.viewmodel.compose.viewModel
 import androidx.navigation.NavController
 import com.example.fitnessappcompose.ui.theme.AppTypography
-import com.example.fitnessappcompose.utils.SharedViewModel
+import com.example.fitnessappcompose.SharedViewModel
 
 
 @Composable
@@ -31,7 +31,7 @@ fun SessionOverScreen(navController: NavController, sharedViewModel: SharedViewM
         Text(text = "You have completed your workout.", style = AppTypography.bodyMedium)
         Spacer(modifier = Modifier.height(16.dp))
         training.value?.let {
-            Text(text = "Workout: ${it.name ?: "No name"}", style = AppTypography.bodyMedium)
+            Text(text = "Workout: ${it.name}", style = AppTypography.bodyMedium)
             Spacer(modifier = Modifier.height(8.dp))
             Text(text = "Exercises Completed: ${it.exercises.size}", style = AppTypography.bodyMedium)
         }

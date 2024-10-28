@@ -17,7 +17,7 @@ import androidx.lifecycle.viewmodel.compose.viewModel
 import androidx.navigation.NavController
 import com.example.fitnessappcompose.ui.screens.Exercise
 import com.example.fitnessappcompose.ui.screens.getExercises
-import com.example.fitnessappcompose.utils.SharedViewModel
+import com.example.fitnessappcompose.SharedViewModel
 
 @Composable
 fun SelectExerciseScreen(navController: NavController, sharedViewModel: SharedViewModel = viewModel()) {

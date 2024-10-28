@@ -1,12 +1,15 @@
 package com.example.fitnessappcompose.ui.screens.subscreen
 
 import android.content.Context
+import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.*
+import androidx.compose.foundation.text.KeyboardOptions
 import androidx.compose.material3.*
 import androidx.compose.runtime.*
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.platform.LocalContext
+import androidx.compose.ui.text.input.KeyboardType
 import androidx.compose.ui.unit.dp
 import androidx.navigation.NavController
 import com.example.fitnessappcompose.utils.*
@@ -38,31 +41,56 @@ fun DisplayProfileDataScreen(navController: NavController, onEditClick: () -> Un
             .fillMaxSize()
             .padding(16.dp),
         verticalArrangement = Arrangement.Center,
-        horizontalAlignment = Alignment.CenterHorizontally
+        horizontalAlignment = Alignment.Start
     ) {
         Text(text = "Profile Data", style = MaterialTheme.typography.headlineSmall)
         Spacer(modifier = Modifier.height(20.dp))
-        Text(text = "Full Name: $fullName")
-        Spacer(modifier = Modifier.height(10.dp))
-        Text(text = "Username: $username")
-        Spacer(modifier = Modifier.height(10.dp))
-        Text(text = "Gender: $gender")
-        Spacer(modifier = Modifier.height(10.dp))
-        Text(text = "Age: $age")
-        Spacer(modifier = Modifier.height(10.dp))
-        Text(text = "Height: $height")
-        Spacer(modifier = Modifier.height(10.dp))
-        Text(text = "Weight: $weight")
+
+        // List of profile fields
+        listOf(
+            "Full Name" to fullName,
+            "Username" to username,
+            "Gender" to gender,
+            "Age" to age,
+            "Height" to height,
+            "Weight" to weight
+        ).forEach { (label, value) ->
+            ProfileDataRow(label = label, value = value)
+            Spacer(modifier = Modifier.height(10.dp))
+        }
+
         Spacer(modifier = Modifier.height(20.dp))
-        Button(onClick = onEditClick) {
+        Button(onClick = onEditClick, modifier = Modifier.fillMaxWidth()) {
             Text("Edit")
         }
         Spacer(modifier = Modifier.height(10.dp))
-        Button(onClick = { navController.navigateUp() }) {
+        Button(onClick = { navController.navigateUp() }, modifier = Modifier.fillMaxWidth()) {
             Text("Back")
         }
     }
 }
+
+@Composable
+fun ProfileDataRow(label: String, value: String) {
+    Surface(
+        modifier = Modifier
+            .fillMaxWidth()
+            .padding(vertical = 4.dp),
+        color = MaterialTheme.colorScheme.surface,
+        tonalElevation = 2.dp,
+        shape = MaterialTheme.shapes.medium
+    ) {
+        Row(
+            modifier = Modifier.padding(16.dp),
+            verticalAlignment = Alignment.CenterVertically
+        ) {
+            Text(text = "$label:", style = MaterialTheme.typography.bodyLarge)
+            Spacer(modifier = Modifier.width(8.dp))
+            Text(text = value, style = MaterialTheme.typography.bodyMedium)
+        }
+    }
+}
+
 
 @Composable
 fun EditProfileDataScreen(navController: NavController, context: Context, onSaveClick: () -> Unit) {
@@ -88,20 +116,35 @@ fun EditProfileDataScreen(navController: NavController, context: Context, onSave
         Spacer(modifier = Modifier.height(10.dp))
         OutlinedTextField(value = gender, onValueChange = { gender = it }, label = { Text("Gender") })
         Spacer(modifier = Modifier.height(10.dp))
-        OutlinedTextField(value = age, onValueChange = { age = it }, label = { Text("Age") })
+        OutlinedTextField(
+            value = age,
+            onValueChange = { age = it },
+            label = { Text("Age") },
+            keyboardOptions = KeyboardOptions(keyboardType = KeyboardType.Number)
+        )
         Spacer(modifier = Modifier.height(10.dp))
-        OutlinedTextField(value = height, onValueChange = { height = it }, label = { Text("Height") })
+        OutlinedTextField(
+            value = height,
+            onValueChange = { height = it },
+            label = { Text("Height") },
+            keyboardOptions = KeyboardOptions(keyboardType = KeyboardType.Number)
+        )
         Spacer(modifier = Modifier.height(10.dp))
-        OutlinedTextField(value = weight, onValueChange = { weight = it }, label = { Text("Weight") })
+        OutlinedTextField(
+            value = weight,
+            onValueChange = { weight = it },
+            label = { Text("Weight") },
+            keyboardOptions = KeyboardOptions(keyboardType = KeyboardType.Number)
+        )
         Spacer(modifier = Modifier.height(20.dp))
         Button(onClick = {
             saveProfileData(context, fullName, username, gender, age, height, weight)
             onSaveClick()
-        }) {
+        }, modifier = Modifier.fillMaxWidth()) {
             Text("Save")
         }
         Spacer(modifier = Modifier.height(10.dp))
-        Button(onClick = { navController.navigateUp() }) {
+        Button(onClick = { navController.navigateUp() }, modifier = Modifier.fillMaxWidth()) {
             Text("Cancel")
         }
     }
@@ -115,3 +158,4 @@ fun saveProfileData(context: Context, fullName: String, username: String, gender
     setHeight(context, height)
     setWeight(context, weight)
 }
+

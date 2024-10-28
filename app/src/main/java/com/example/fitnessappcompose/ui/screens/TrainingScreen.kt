@@ -15,7 +15,7 @@ import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.unit.dp
 import androidx.navigation.NavController
 import com.example.fitnessappcompose.R
-import com.example.fitnessappcompose.utils.SharedViewModel
+import com.example.fitnessappcompose.SharedViewModel
 import kotlinx.coroutines.launch
 import androidx.compose.runtime.saveable.rememberSaveable
 import androidx.compose.runtime.saveable.Saver

@@ -31,7 +31,7 @@ fun ProfileScreen(navController: NavController) {
     val fullName = getFullName(context)
     val sharedPreferences = context.getSharedPreferences(PREFS_NAME, Context.MODE_PRIVATE)
     var selectedAvatar by remember { mutableIntStateOf(sharedPreferences.getInt(KEY_SELECTED_AVATAR, R.drawable.avatar_default_guy)) } // Default avatar
-    var imageUri by remember { mutableStateOf<Uri?>(null) }
+    val imageUri by remember { mutableStateOf<Uri?>(null) }
     var showDialog by remember { mutableStateOf(false) }
 
     // List of avatar options

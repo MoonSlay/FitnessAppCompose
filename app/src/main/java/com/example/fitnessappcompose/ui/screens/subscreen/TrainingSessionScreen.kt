@@ -12,7 +12,7 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.unit.dp
 import androidx.lifecycle.viewmodel.compose.viewModel
 import androidx.navigation.NavController
-import com.example.fitnessappcompose.utils.SharedViewModel
+import com.example.fitnessappcompose.SharedViewModel
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.launch
 import android.util.Log

@@ -1,3 +1,5 @@
+@file:Suppress("UNCHECKED_CAST")
+
 package com.example.fitnessappcompose.ui.screens
 
 import androidx.compose.foundation.Image

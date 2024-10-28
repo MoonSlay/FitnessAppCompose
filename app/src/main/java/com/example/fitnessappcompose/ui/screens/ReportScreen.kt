@@ -8,9 +8,8 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.unit.dp
-import androidx.compose.ui.unit.sp
 import androidx.lifecycle.viewmodel.compose.viewModel
-import com.example.fitnessappcompose.utils.SharedViewModel
+import com.example.fitnessappcompose.SharedViewModel
 import com.example.fitnessappcompose.utils.getGoalDailySC
 import com.example.fitnessappcompose.utils.getGoalWeeklySC
 import com.example.fitnessappcompose.utils.getGoalMonthlySC

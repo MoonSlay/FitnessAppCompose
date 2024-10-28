@@ -1,4 +1,3 @@
-// NavigationGraph.kt
 package com.example.fitnessappcompose.navigation
 
 import androidx.compose.runtime.Composable
@@ -8,11 +7,16 @@ import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import com.example.fitnessappcompose.ui.screens.*
 import com.example.fitnessappcompose.ui.screens.subscreen.*
-import com.example.fitnessappcompose.utils.SharedViewModel
+import com.example.fitnessappcompose.SharedViewModel
 import androidx.lifecycle.viewmodel.compose.viewModel
 
 @Composable
-fun NavigationGraph(navController: NavHostController, modifier: Modifier = Modifier) {
+fun NavigationGraph(
+    navController: NavHostController,
+    modifier: Modifier = Modifier,
+    toggleDarkMode: (Boolean) -> Unit,
+    isDarkMode: Boolean
+) {
     val sharedViewModel: SharedViewModel = viewModel()
 
     NavHost(navController, startDestination = "home", modifier = modifier) {
@@ -25,7 +29,7 @@ fun NavigationGraph(navController: NavHostController, modifier: Modifier = Modif
         composable("goal_data") { GoalDataScreen(navController = navController) }
         composable("trainingDetail") { TrainingDetailScreen(navController = navController, sharedViewModel = sharedViewModel) }
         composable("trainingSession") { TrainingSessionScreen(navController = navController, sharedViewModel = sharedViewModel) }
-        composable("settings") { SettingsScreen(navController = navController) }
+        composable("settings") { SettingsScreen(toggleDarkMode = toggleDarkMode, isDarkMode = isDarkMode) }
         composable("selectExercise") { SelectExerciseScreen(navController, sharedViewModel) }
         composable("sessionOver") { SessionOverScreen(navController = navController, sharedViewModel = sharedViewModel) }
     }

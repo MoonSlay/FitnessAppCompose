@@ -22,7 +22,7 @@ import androidx.lifecycle.viewmodel.compose.viewModel
 import androidx.navigation.NavController
 import com.example.fitnessappcompose.R
 import com.example.fitnessappcompose.ui.screens.Exercise
-import com.example.fitnessappcompose.utils.SharedViewModel
+import com.example.fitnessappcompose.SharedViewModel
 
 // TrainingDetailScreen.kt
 @Composable
@@ -36,7 +36,7 @@ fun TrainingDetailScreen(navController: NavController, sharedViewModel: SharedVi
                 .padding(16.dp),
             horizontalAlignment = Alignment.CenterHorizontally
         ) {
-            Text(text = it.name ?: "No name", style = MaterialTheme.typography.headlineLarge)
+            Text(text = it.name, style = MaterialTheme.typography.headlineLarge)
             Spacer(modifier = Modifier.height(16.dp))
             Text(text = "Exercises", style = MaterialTheme.typography.headlineSmall)
             LazyColumn {
@@ -83,7 +83,7 @@ fun ExerciseSetCard(exercise: Exercise, setNumber: Int, sharedViewModel: SharedV
             verticalAlignment = Alignment.CenterVertically,
             modifier = Modifier.padding(8.dp)
         ) {
-            exercise.imageResId?.let {
+            exercise.imageResId.let {
                 Image(
                     painter = painterResource(id = it),
                     contentDescription = exercise.name,

@@ -6,15 +6,12 @@ import androidx.compose.runtime.*
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.unit.dp
-import androidx.lifecycle.viewmodel.compose.viewModel
-import androidx.navigation.NavController
-import com.example.fitnessappcompose.utils.ThemeViewModel
 
 @Composable
-fun SettingsScreen(navController: NavController) {
-    val themeViewModel: ThemeViewModel = viewModel()
-    val isDarkMode by themeViewModel.isDarkMode.collectAsState()
-
+fun SettingsScreen(
+    toggleDarkMode: (Boolean) -> Unit,
+    isDarkMode: Boolean
+) {
     Column(
         modifier = Modifier
             .fillMaxSize()
@@ -39,7 +36,7 @@ fun SettingsScreen(navController: NavController) {
                 Switch(
                     checked = isDarkMode,
                     onCheckedChange = { isChecked ->
-                        themeViewModel.toggleDarkMode(isChecked)
+                        toggleDarkMode(isChecked)
                     }
                 )
             }

@@ -1,5 +1,6 @@
 package com.example.fitnessappcompose
 
+import android.annotation.SuppressLint
 import android.content.Context
 import android.hardware.Sensor
 import android.hardware.SensorEvent
@@ -20,8 +21,6 @@ import androidx.navigation.compose.rememberNavController
 import com.example.fitnessappcompose.navigation.BottomNavigationBar
 import com.example.fitnessappcompose.navigation.NavigationGraph
 import com.example.fitnessappcompose.ui.theme.AppTheme
-import com.example.fitnessappcompose.utils.SharedViewModel
-import com.example.fitnessappcompose.utils.ThemeViewModel
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.update
@@ -39,6 +38,9 @@ class MainActivity : ComponentActivity(), SensorEventListener {
     // StateFlow to track the step count in real-time
     private val _stepCount = MutableStateFlow(0)
     val stepCount: StateFlow<Int> get() = _stepCount
+
+    private val _isDarkMode = MutableStateFlow(false)
+    val isDarkMode: StateFlow<Boolean> get() = _isDarkMode
 
     // SharedViewModel for managing shared data between components
     private lateinit var sharedViewModel: SharedViewModel
@@ -59,27 +61,30 @@ class MainActivity : ComponentActivity(), SensorEventListener {
 
         // Set the UI content
         setContent {
-            val themeViewModel: ThemeViewModel = viewModel()  // Get the ThemeViewModel instance
-            val isDarkMode by themeViewModel.isDarkMode.collectAsState()  // Observe theme mode
+            val isDarkMode by _isDarkMode.collectAsState()
 
-            AppTheme(darkTheme = isDarkMode) {  // Apply the selected theme
+            AppTheme(darkTheme = isDarkMode) {
                 val navController = rememberNavController()
-                registerSensor()  // Register sensor for step detection
+                registerSensor()
 
                 Scaffold(
-                    bottomBar = { BottomNavigationBar(navController) },  // Bottom navigation bar
+                    bottomBar = { BottomNavigationBar(navController) },
                     modifier = Modifier.fillMaxSize()
                 ) { innerPadding ->
-                    // Main navigation graph for the app
-                    NavigationGraph(navController, Modifier.padding(innerPadding))
+                    NavigationGraph(navController, Modifier.padding(innerPadding), ::toggleDarkMode, isDarkMode)
                 }
             }
         }
     }
 
+    private fun toggleDarkMode(isDark: Boolean) {
+        _isDarkMode.value = isDark
+    }
+
     /**
      * Registers and unregisters the step detector sensor to listen for step events.
      */
+    @SuppressLint("ComposableNaming")
     @Composable
     private fun registerSensor() {
         LaunchedEffect(Unit) {

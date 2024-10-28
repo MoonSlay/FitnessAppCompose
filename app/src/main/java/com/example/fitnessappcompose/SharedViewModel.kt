@@ -1,5 +1,5 @@
 // SharedViewModel.kt
-package com.example.fitnessappcompose.utils
+package com.example.fitnessappcompose
 
 import android.app.Application
 import android.content.Context
