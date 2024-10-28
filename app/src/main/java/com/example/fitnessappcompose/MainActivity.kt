@@ -78,11 +78,13 @@ class MainActivity : ComponentActivity(), SensorEventListener {
         }
     }
 
+    // Function to toggle the dark mode state
     private fun toggleDarkMode(isDark: Boolean) {
         _isDarkMode.value = isDark
         saveDarkModeState(isDark)
     }
 
+    // Function to save the dark mode state in SharedPreferences
     private fun saveDarkModeState(isDark: Boolean) {
         val sharedPreferences = getSharedPreferences("user_prefs", Context.MODE_PRIVATE)
         with(sharedPreferences.edit()) {
@@ -106,6 +108,7 @@ class MainActivity : ComponentActivity(), SensorEventListener {
         }
     }
 
+    // Function to handle sensor changes
     override fun onSensorChanged(sensorEvent: SensorEvent?) {
         if (sensorEvent?.sensor?.type == Sensor.TYPE_STEP_DETECTOR) {
             _stepCount.update { it + 1 }  // Increment step count
@@ -122,6 +125,7 @@ class MainActivity : ComponentActivity(), SensorEventListener {
     }
 
 
+    // Function to save the step count in SharedPreferences
     private fun saveStepCount() {
         val sharedPreferences = getSharedPreferences("user_prefs", Context.MODE_PRIVATE)
         with(sharedPreferences.edit()) {

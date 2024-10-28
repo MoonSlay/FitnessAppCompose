@@ -39,6 +39,7 @@ class SharedViewModel(application: Application) : AndroidViewModel(application) 
         resetCountsIfNeeded()
     }
 
+    // Update the calories burned based on the number of calories burned
     fun setCaloriesBurned(calories: Int) {
         _caloriesBurned.value = calories
 
@@ -55,6 +56,7 @@ class SharedViewModel(application: Application) : AndroidViewModel(application) 
         sharedPreferences.edit().putInt("monthly_calories_burned", newMonthlyTotal).apply()
     }
 
+    // Update the step count and calories burned based on the number of steps taken
     fun setStepCount(steps: Int) {
 
         val newDailyTotal = (_dailyStepCount.value ?: 0) + steps
@@ -70,6 +72,7 @@ class SharedViewModel(application: Application) : AndroidViewModel(application) 
         sharedPreferences.edit().putInt("monthly_step_count", newMonthlyTotal).apply()
     }
 
+    // Reset the daily, weekly, and monthly counts if the date has changed
     private fun resetCountsIfNeeded() {
         val currentDate = Calendar.getInstance()
         val lastResetDate = Calendar.getInstance().apply {
